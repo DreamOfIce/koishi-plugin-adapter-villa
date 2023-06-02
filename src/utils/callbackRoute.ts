@@ -1,7 +1,8 @@
 import type { Context } from "koishi";
 import type { KoaContext, koaMiddleware } from "../types";
 import { logger } from "./logger";
-import { defineCallbackResponse } from "../structs";
+import { defineStruct } from "./defineStruct";
+import type { Callback } from "../structs";
 
 const callbacks: Record<string, koaMiddleware> = {};
 
@@ -19,13 +20,16 @@ export function registerCallbackRoute(
     if (callback) {
       try {
         logger.info(`Receive callback of bot ${botId}`);
-        logger.debug(ctx.request.body);
+        logger.debug(JSON.stringify(ctx.request.body, undefined, 2));
         await callback(ctx, next);
-        ctx.body = defineCallbackResponse({ message: "Success", retcode: 0 });
+        ctx.body = defineStruct<Callback.Response>({
+          message: "Success",
+          retcode: 0,
+        });
         ctx.status = 200;
       } catch (err) {
         logger.error(err);
-        ctx.body = defineCallbackResponse({
+        ctx.body = defineStruct<Callback.Response>({
           message: "Error handling callback request",
           retcode: -1,
         });
@@ -33,7 +37,7 @@ export function registerCallbackRoute(
       }
     } else {
       logger.warn(`Receive callback of unknown bot: ${botId}`);
-      ctx.body = defineCallbackResponse({
+      ctx.body = defineStruct<Callback.Response>({
         message: "Bot not found",
         retcode: 1,
       });
