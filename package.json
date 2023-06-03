@@ -17,13 +17,15 @@
   },
   "license": "MIT",
   "author": "冰雪殇璃陌梦 <admin@dreamofice.cn> (https://www.dreamofice.cn)",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
   "scripts": {
+    "build": "tsup",
     "lint:eslint": "eslint --ext .ts --fix ./src",
     "lint:prettier": "prettier --write .",
     "prepare": "husky install",
