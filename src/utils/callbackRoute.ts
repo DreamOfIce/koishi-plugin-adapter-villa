@@ -17,7 +17,7 @@ export function registerCallbackRoute(
     const botId = ctx.request.body?.event?.robot?.template?.id;
     const [, callback] =
       Object.entries(callbacks).find(([id]) => id === botId) ?? [];
-    if (callback) {
+    if (botId && callback) {
       try {
         logger.info(`Receive callback of bot ${botId}`);
         logger.debug(JSON.stringify(ctx.request.body, undefined, 2));
@@ -36,7 +36,7 @@ export function registerCallbackRoute(
         ctx.status = 500;
       }
     } else {
-      logger.warn(`Receive callback of unknown bot: ${botId}`);
+      logger.warn(`Receive callback of unknown bot: ${botId as string}`);
       ctx.body = defineStruct<Callback.Response>({
         message: "Bot not found",
         retcode: 1,

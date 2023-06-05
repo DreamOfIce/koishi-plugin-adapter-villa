@@ -1,4 +1,6 @@
 import type { Command } from "./command";
+import type { Message } from "./message";
+
 export namespace Callback {
   export interface Request {
     event: RobotEvent;
@@ -80,6 +82,18 @@ export namespace Callback {
     };
   }
 
+  export interface MsgContentInfo extends Message.MsgContentInfo {
+    user: {
+      /** avatar url */
+      portraitUri: string;
+      extra: string;
+      name: string;
+      alias: string;
+      id: string;
+      /** avatar url */
+      portrait: string;
+    };
+  }
   export interface Response {
     message: string;
     retcode: number;

@@ -7,7 +7,7 @@ export type koaMiddleware = (
 ) => Promise<void> | void;
 
 interface CalllbackRequest extends Request {
-  body?: Callback;
+  body?: Callback.Request;
 }
 export interface KoaContext extends Context {
   request: CalllbackRequest;
