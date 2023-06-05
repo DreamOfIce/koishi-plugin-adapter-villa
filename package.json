@@ -26,9 +26,11 @@
   ],
   "scripts": {
     "build": "tsup",
+    "postinstall": "husky install",
     "lint:eslint": "eslint --ext .ts --fix ./src",
     "lint:prettier": "prettier --write .",
-    "prepare": "husky install",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "resolutions": {

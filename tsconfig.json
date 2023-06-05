@@ -4,7 +4,7 @@
     "@tsconfig/strictest/tsconfig.json",
     "@tsconfig/esm/tsconfig.json"
   ],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "*.config.ts"],
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true
