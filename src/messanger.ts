@@ -1,6 +1,6 @@
 import { type Dict, Element, Messenger, type SendOptions } from "koishi";
 import { Message } from "./structs";
-import { defineStruct, isBot, logger } from "./utils";
+import { defineStruct, getChannel, isBot, logger } from "./utils";
 import type { VillaBot } from "./bot";
 
 export class VillaMessanger extends Messenger<VillaBot> {
@@ -126,9 +126,11 @@ export class VillaMessanger extends Messenger<VillaBot> {
       }
       case "sharp": {
         const {
-          id,
-          name = `#房间${id}`,
           guild = this.guildId, // a custom attr
+          id,
+          name = `#${
+            (await getChannel.call(this.bot, id, guild)).channelName ?? id
+          }`,
         } = element.attrs as Dict<string, "id" | "name" | "guild">;
         this.msg.content.text += name;
         this.msg.content.entities.push({
