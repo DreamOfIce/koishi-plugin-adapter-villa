@@ -192,7 +192,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "del":
       case "sup":
       case "sub": {
-        logger.warn("Villa does not currently support rich text");
+        logger.warn("Currently villa does not support rich text");
         await this.render(element.children);
         break;
       }
