@@ -44,8 +44,8 @@ export class VillaMessanger extends Messenger<VillaBot> {
         }
       );
       if (res.retcode !== 0) {
-        logger.error(
-          `Failed to send message '${this.msg.content.text}': ${res.message}`
+        throw new Error(
+          `Failed to send message '${this.msg.content.text}': ${res.message}(${res.retcode})`
         );
       }
       session.messageId = res.data.bot_msg_id;
@@ -91,7 +91,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
               length,
               entity: {
                 type: "mentioned_user",
-                user_id: Number(id),
+                user_id: id,
               },
             });
           }

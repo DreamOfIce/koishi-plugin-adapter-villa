@@ -1,3 +1,5 @@
+import type { VillaResponse } from "./response";
+
 export namespace Message {
   export interface Request {
     room_id: number;
@@ -68,7 +70,7 @@ export namespace Message {
     }
     export interface MentionedUserEntity {
       type: "mentioned_user";
-      user_id: number;
+      user_id: string;
     }
     export interface MentionedAllEntity {
       type: "mentioned_all";
@@ -84,11 +86,7 @@ export namespace Message {
     }
   }
 
-  export interface Response {
-    retcode: number;
-    message: string;
-    data: {
-      bot_msg_id: string;
-    };
-  }
+  export type Response = VillaResponse<{
+    bot_msg_id: string;
+  }>;
 }
