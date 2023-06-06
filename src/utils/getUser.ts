@@ -33,11 +33,18 @@ export async function getUser(
       params: defineStruct<Member.Params>({ uid: userId }),
     }
   );
+
+  if (res.retcode !== 0) {
+    logger.warn(
+      `Failed to get profile of user ${userId}: ${res.message}(${res.retcode})`
+    );
+  }
+
   return {
     userId,
-    username: res.basic.nickname,
-    nickname: res.basic.nickname,
-    avatar: res.basic.avatar_url,
+    username: res.data.basic.nickname,
+    nickname: res.data.basic.nickname,
+    avatar: res.data.basic.avatar_url,
     isBot: false,
   };
 }

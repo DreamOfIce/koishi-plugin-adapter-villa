@@ -1,12 +1,14 @@
+import type { VillaResponse } from "./response";
+
 export namespace Member {
   export interface Params {
     uid: string;
   }
-  export interface Response {
+  export type Response = VillaResponse<{
     basic: MemberBasic;
     role_id_list: number[];
     joined_at: number;
-  }
+  }>;
 
   export interface MemberBasic {
     uid: number;
