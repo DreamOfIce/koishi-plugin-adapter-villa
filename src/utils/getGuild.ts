@@ -23,7 +23,7 @@ export async function getGuild(
   }
 
   return {
-    guildId: res.data.villa_id.toString(),
-    guildName: res.data?.name,
+    guildId: res.data.villa.villa_id.toString(),
+    guildName: res.data?.villa.name,
   };
 }

@@ -10,6 +10,7 @@ import { VillaBot as VillaBotConfig } from "./config";
 import {
   createAxios,
   defineStruct,
+  getChannel,
   getGuild,
   getUser,
   logger,
@@ -144,8 +145,10 @@ export class VillaBot extends Bot<VillaBotConfig.Config> {
     }
   }
 
-  public override getUser = getUser;
+  public override getChannel = getChannel;
   public override getGuild = getGuild;
+  public override getUser = getUser;
+
   public override platform = "villa";
 }
 
