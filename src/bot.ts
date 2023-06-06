@@ -62,7 +62,7 @@ export class VillaBot extends Bot<VillaBotConfig.Config> {
   public override sendMessage(
     channelId: string,
     content: Fragment,
-    guildId?: string | undefined,
+    guildId: string | undefined,
     options?: SendOptions | undefined
   ): Promise<string[]> {
     return new VillaMessanger(this, channelId, guildId, options).send(content);

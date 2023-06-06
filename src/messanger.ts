@@ -1,6 +1,5 @@
 import { type Dict, Element, Messenger, type SendOptions } from "koishi";
 import { Message } from "./structs";
-import { text } from "stream/consumers";
 import { defineStruct, isBot, logger } from "./utils";
 import type { VillaBot } from "./bot";
 
@@ -26,6 +25,11 @@ export class VillaMessanger extends Messenger<VillaBot> {
   public override async flush(): Promise<void> {
     const session = this.bot.session(this.session);
     try {
+      logger.debug(
+        `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
+          this.guildId
+        } room ${this.channelId}`
+      );
       const res = await this.bot.axios.post<Message.Response>(
         "/vila/api/bot/platform/sendMessage",
         defineStruct<Message.Request>({
@@ -62,70 +66,69 @@ export class VillaMessanger extends Messenger<VillaBot> {
   }
 
   public override async visit(element: Element): Promise<void> {
-    const offset = text.length;
+    const offset = this.msg.content.text.length;
     switch (element.type) {
       case "text":
         this.msg.content.text += element.attrs["content"];
         break;
       case "at": {
         const { type, name, id } = element.attrs as Dict<string, string>;
-        if (id) {
-          if (name) {
-            const length = name.length + 1;
-            this.msg.content.text += `@${name}`;
-            if (isBot(id)) {
-              this.msg.content.entities.push({
-                offset,
-                length,
-                entity: {
-                  type: "mentioned_robot",
-                  bot_id: id,
-                },
-              });
-            } else {
-              this.msg.content.entities.push({
-                offset,
-                length,
-                entity: {
-                  type: "mentioned_user",
-                  user_id: Number(id),
-                },
-              });
-            }
-            if (
-              this.msg.mentionedInfo?.type !== Message.MentionedType.allMember
-            ) {
-              this.msg.mentionedInfo = {
-                type: Message.MentionedType.partMemeber,
-                userIdList: this.msg.mentionedInfo?.userIdList ?? [],
-              };
-              this.msg.mentionedInfo.userIdList.push(id);
-            }
-          } else if (type === "all") {
-            this.msg.content.text += "@全体成员";
+        if (id && name) {
+          const length = name.length + 1;
+          this.msg.content.text += `@${name}`;
+          if (isBot(id)) {
             this.msg.content.entities.push({
               offset,
-              length: 5,
+              length,
               entity: {
-                type: "mentioned_all",
+                type: "mentioned_robot",
+                bot_id: id,
               },
             });
-            this.msg.mentionedInfo = {
-              type: Message.MentionedType.allMember,
-            };
           } else {
-            logger.warn(
-              `@user with role or type='here' is not currently support`
-            );
+            this.msg.content.entities.push({
+              offset,
+              length,
+              entity: {
+                type: "mentioned_user",
+                user_id: Number(id),
+              },
+            });
           }
+          if (
+            this.msg.mentionedInfo?.type !== Message.MentionedType.allMember
+          ) {
+            this.msg.mentionedInfo = {
+              type: Message.MentionedType.partMemeber,
+              userIdList: this.msg.mentionedInfo?.userIdList ?? [],
+            };
+            this.msg.mentionedInfo.userIdList.push(id);
+          }
+        } else if (type === "all") {
+          this.msg.content.text += "@全体成员";
+          this.msg.content.entities.push({
+            offset,
+            length: 5,
+            entity: {
+              type: "mentioned_all",
+            },
+          });
+          this.msg.mentionedInfo = {
+            type: Message.MentionedType.allMember,
+          };
+        } else {
+          logger.warn(
+            `@user with role or type='here' is not currently support`
+          );
         }
+
         break;
       }
       case "sharp": {
         const {
           id,
-          name = `房间${id}`,
-          guild, // a custom attr
+          name = `#房间${id}`,
+          guild = this.guildId, // a custom attr
         } = element.attrs as Dict<string, "id" | "name" | "guild">;
         this.msg.content.text += name;
         this.msg.content.entities.push({
@@ -134,7 +137,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
           entity: {
             type: "villa_room_link",
             room_id: id,
-            villa_id: guild ?? this.guildId,
+            villa_id: guild,
           },
         });
         break;
@@ -147,9 +150,15 @@ export class VillaMessanger extends Messenger<VillaBot> {
       }
       case "a": {
         const { href } = element.attrs as Dict<string, "href">;
-        const offset = text.length;
-        const length = href.length;
-        this.msg.content.text += href;
+        const currentMsg = this.msg;
+        await this.render(element.children);
+        if (this.msg !== currentMsg) {
+          logger.warn(
+            `The message is flushed when rendering the child elements of <a>`
+          );
+          break;
+        }
+        const length = this.msg.content.text.length - offset;
         this.msg.content.entities.push({
           offset,
           length,
@@ -166,11 +175,11 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "file": {
         const url = (element.attrs as Dict<string, "url">)["url"];
         logger.warn(
-          `Midia Element <${element.type}> is not currently support by villa bot`
+          `Media Element <${element.type}> is not currently support by villa bot`
         );
         this.msg.content.text += `![${element.type}](${
           /^(https?:\/\/)/i.test(url) ? url : `raw`
-        })`;
+        })\n`;
         break;
       }
       case "b":

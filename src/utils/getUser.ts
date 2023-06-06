@@ -3,12 +3,13 @@ import type { VillaBot } from "../bot";
 import type { Member } from "../structs";
 import { defineStruct } from "./defineStruct";
 import { logger } from "./logger";
+import { isBot } from "./isBot";
 
 export async function getUser(
   this: VillaBot,
   userId: string
 ): Promise<Universal.User> {
-  if (userId.startsWith("bot_")) {
+  if (isBot(userId)) {
     if (userId === this.id) {
       return {
         username: this.username ?? "",
