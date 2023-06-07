@@ -31,6 +31,7 @@
     "lint:prettier": "prettier --write .",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
+    "release": "release-it",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "resolutions": {
