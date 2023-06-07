@@ -23,7 +23,7 @@ jobs:
           yarn set version stable
       - name: Install deps and build
         run: |
-          yarn install --immutable
+          yarn install
           yarn build
 
       - name: Publish
