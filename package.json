@@ -63,9 +63,10 @@
     "koishi": "^4.13.1"
   },
   "koishi": {
+    "preview": true,
     "description": {
-      "en": "Koishi adapter for Miyoushe villa",
-      "zh": "Koishi 的米游社大别野适配器"
+      "en": "villa adapter for Koishi",
+      "zh": "Koishi 的大别野适配器"
     },
     "locales": [
       "en",
