@@ -1,10 +1,4 @@
-import type { VillaResponse } from "./response";
-
 export namespace Room {
-  export interface Params {
-    room_id: string;
-  }
-
   export interface Room {
     room_id: string;
     room_name: string;
@@ -29,5 +23,4 @@ export namespace Room {
     is_all_send_msg: boolean;
     roles: string[];
   }
-  export type Response = VillaResponse<{ room: Room.Room }>;
 }

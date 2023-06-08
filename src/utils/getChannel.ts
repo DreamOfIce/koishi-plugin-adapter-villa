@@ -1,5 +1,5 @@
 import type { Universal } from "koishi";
-import { Room } from "../structs";
+import type { getRoom } from "../apis";
 import type { VillaBot } from "../bot";
 import { logger } from "./logger";
 import { defineStruct } from "./defineStruct";
@@ -9,10 +9,10 @@ export async function getChannel(
   channelId: string,
   guildId: string
 ): Promise<Universal.Channel> {
-  const res = await this.axios.get<Room.Response>(
+  const res = await this.axios.get<getRoom.Response>(
     "/vila/api/bot/platform/getVilla",
     {
-      params: defineStruct<Room.Params>({
+      params: defineStruct<getRoom.Params>({
         room_id: channelId,
       }),
       headers: {

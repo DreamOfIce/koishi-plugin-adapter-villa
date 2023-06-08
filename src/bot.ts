@@ -11,6 +11,7 @@ import {
   createAxios,
   defineStruct,
   getChannel,
+  getChannelList,
   getGuild,
   getUser,
   logger,
@@ -27,7 +28,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
   protected id: string;
   /** bot secret */
   protected secret: string;
-  /** */
+  /** bot description  */
   protected description = "";
 
   /** Currently ustomisation is not supported */
@@ -149,6 +150,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
   }
 
   public override getChannel = getChannel;
+  public override getChannelList = getChannelList;
   public override getGuild = getGuild;
   public override getUser = getUser;
 

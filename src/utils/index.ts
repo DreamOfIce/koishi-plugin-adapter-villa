@@ -2,6 +2,7 @@ export * from "./callbackRoute";
 export * from "./createAxios";
 export * from "./defineStruct";
 export * from "./getChannel";
+export * from "./getChannelList";
 export * from "./getGuild";
 export * from "./getUser";
 export * from "./isBot";
