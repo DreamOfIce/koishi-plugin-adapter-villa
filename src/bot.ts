@@ -6,7 +6,7 @@ import {
   type SendOptions,
   type Universal,
 } from "koishi";
-import { VillaBot as VillaBotConfig } from "./config";
+import { VillaBotConfig } from "./config";
 import {
   createAxios,
   defineStruct,
@@ -22,7 +22,7 @@ import { Callback } from "./structs";
 import { VillaMessanger } from "./messanger";
 // import { parseMessage } from "./utils/parseMessage";
 
-export class VillaBot extends Bot<VillaBotConfig.Config> {
+export class VillaBot extends Bot<VillaBotConfig> {
   /** bot id */
   protected id: string;
   /** bot secret */
@@ -33,7 +33,7 @@ export class VillaBot extends Bot<VillaBotConfig.Config> {
   /** axios instance with auth header */
   public axios: Quester;
 
-  public constructor(ctx: Context, config: VillaBotConfig.Config) {
+  public constructor(ctx: Context, config: VillaBotConfig) {
     super(ctx, config);
 
     this.id = config.id;
@@ -152,4 +152,6 @@ export class VillaBot extends Bot<VillaBotConfig.Config> {
   public override platform = "villa";
 }
 
-export * from "./config";
+export namespace VillaBot {
+  export const Config = VillaBotConfig;
+}
