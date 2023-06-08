@@ -1,3 +1,9 @@
+## [0.1.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.1.0...v0.1.1) (2023-06-08)
+
+### Bug Fixes
+
+- fix config export ([3e97f72](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/3e97f720068cb56406ff5aaceab6f622e9b56bcd))
+
 ## 0.1.0 (2023-06-07)
 
 ### Features
