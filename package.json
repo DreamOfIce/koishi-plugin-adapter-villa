@@ -3,9 +3,12 @@
   "version": "0.1.1",
   "description": "",
   "keywords": [
+    "adapter",
     "chatbot",
     "koishi",
-    "plugin"
+    "mihoyo",
+    "plugin",
+    "villa"
   ],
   "homepage": "https://github.com/DreamOfIce/koishi-plugin-adapter-villa#readme",
   "bugs": {
@@ -27,6 +30,7 @@
   "scripts": {
     "build": "tsup",
     "postinstall": "husky install",
+    "lint": "yarn lint:eslint; yarn lint:prettier",
     "lint:eslint": "eslint --ext .ts --fix ./src",
     "lint:prettier": "prettier --write .",
     "prepack": "pinst --disable",
@@ -66,7 +70,6 @@
     "koishi": "^4.13.1"
   },
   "koishi": {
-    "preview": true,
     "description": {
       "en": "villa adapter for Koishi",
       "zh": "Koishi 的大别野适配器"
@@ -74,6 +77,12 @@
     "locales": [
       "en",
       "zh"
-    ]
+    ],
+    "preview": true,
+    "service": {
+      "implements": [
+        "adapter"
+      ]
+    }
   }
 }
