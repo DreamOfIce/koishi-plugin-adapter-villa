@@ -7,7 +7,8 @@ import { isBot } from "./isBot";
 
 export async function getUser(
   this: VillaBot,
-  userId: string
+  userId: string,
+  guildId?: string
 ): Promise<Universal.User> {
   if (isBot(userId)) {
     if (userId === this.id) {
@@ -31,6 +32,9 @@ export async function getUser(
     "/vila/api/bot/platform/getMember",
     {
       params: defineStruct<Member.Params>({ uid: userId }),
+      headers: {
+        "x-rpc-villa_id": guildId,
+      },
     }
   );
 

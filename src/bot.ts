@@ -30,6 +30,9 @@ export class VillaBot extends Bot<VillaBotConfig> {
   /** */
   protected description = "";
 
+  /** Currently ustomisation is not supported */
+  protected apiServer = "https://bbs-api.miyoushe.com";
+
   /** axios instance with auth header */
   public axios: Quester;
 
@@ -40,7 +43,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     this.secret = config.secret;
     this.selfId = config.id;
 
-    this.axios = createAxios(ctx, config.id, config.secret);
+    this.axios = createAxios(ctx, config.id, config.secret, this.apiServer);
   }
 
   public onError(error: Error) {
