@@ -1,5 +1,5 @@
 import type { Universal } from "koishi";
-import type { getRoomList } from "../apis/getRoomList";
+import type { API } from "../structs";
 import type { VillaBot } from "../bot";
 import { logger } from "./logger";
 
@@ -7,7 +7,7 @@ export async function getChannelList(
   this: VillaBot,
   guildId: string
 ): Promise<Universal.Channel[]> {
-  const res = await this.axios.get<getRoomList.Response>(
+  const res = await this.axios.get<API.GetRoomList.Response>(
     "/vila/api/bot/platform/getVillaGroupRoomList",
     {
       headers: {

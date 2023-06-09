@@ -13,7 +13,7 @@ export namespace Callback {
         name: string;
         desc: string;
         icon: string;
-        commands: Command[];
+        commands: Command.Command[];
       };
       villa_id: number;
     };

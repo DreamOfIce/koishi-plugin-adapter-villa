@@ -1,7 +1,7 @@
-import type { Room } from "../structs";
-import type { VillaResponse } from "../types";
+import type { Room } from "..";
+import type { VillaResponse } from "../../types";
 
-export namespace getRoom {
+export namespace GetRoom {
   export interface Params {
     room_id: string;
   }

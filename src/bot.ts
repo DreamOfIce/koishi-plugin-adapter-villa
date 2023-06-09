@@ -99,7 +99,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           timestamp: eventData.JoinVilla.join_at,
           userId: eventData.JoinVilla.join_uid.toString(),
         });
-        logger.debug(
+        logger.info(
           `New member of villa ${body.event.robot.villa_id}: ${eventData.JoinVilla.join_uid}`
         );
         this.dispatch(session);
@@ -126,20 +126,44 @@ export class VillaBot extends Bot<VillaBotConfig> {
           timestamp: eventData.SendMessage.send_at,
           userId: eventData.SendMessage.from_user_id.toString(),
         });
-        logger.info(`Receive message '${session.content}'.`);
+        logger.info(
+          `Receive message '${session.content}'(${eventData.SendMessage.msg_uid})`
+        );
         this.dispatch(session);
         break;
       }
-      case Callback.RobotEventType.CreateRobot:
-        // todo
+      case Callback.RobotEventType.CreateRobot: {
+        const session = super.session({
+          type: "guild-added",
+          subtype: "group",
+          guildId: eventData.CreateRobot.villa_id.toString(),
+          timestamp: new Date().getTime(),
+        });
+        logger.info(
+          `Bot ${this.id} has been added to villa ${eventData.CreateRobot.villa_id}`
+        );
+        this.dispatch(session);
         break;
-      case Callback.RobotEventType.DeleteRobot:
-        // todo
+      }
+      case Callback.RobotEventType.DeleteRobot: {
+        const session = super.session({
+          type: "guild-deleted",
+          subtype: "group",
+          guildId: eventData.DeleteRobot.villa_id.toString(),
+          timestamp: new Date().getTime(),
+        });
+        logger.info(
+          `Bot ${this.id} has been removed from villa ${eventData.DeleteRobot.villa_id}`
+        );
+        this.dispatch(session);
         break;
+      }
       case Callback.RobotEventType.AddQuickEmoticon:
         // todo
         break;
       case Callback.RobotEventType.AuditCallback:
+        // todo
+        break;
       default:
         ctx.body = defineStruct<Callback.Response>({
           message: "Unknown event",
