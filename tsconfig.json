@@ -4,10 +4,11 @@
     "@tsconfig/strictest/tsconfig.json",
     "@tsconfig/esm/tsconfig.json"
   ],
-  "include": ["src/**/*", "*.config.ts"],
+  "include": ["src/**/*"],
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "libs"
+    "outDir": "lib",
+    "rootDir": "src"
   }
 }
