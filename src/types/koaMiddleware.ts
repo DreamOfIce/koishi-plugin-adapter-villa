@@ -1,7 +1,7 @@
 import type { Callback } from "../structs";
 import type { Context, Request } from "koa";
 
-export type koaMiddleware = (
+export type KoaMiddleware = (
   ctx: KoaContext,
   next: () => Promise<void>
 ) => Promise<void> | void;

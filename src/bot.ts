@@ -15,13 +15,13 @@ import {
   getGuild,
   getUser,
   logger,
+  parseMessage,
   registerCallbackRoute,
   removeCallbackRoute,
 } from "./utils";
 import type { KoaContext } from "./types";
 import { Callback } from "./structs";
 import { VillaMessanger } from "./messanger";
-// import { parseMessage } from "./utils/parseMessage";
 
 export class VillaBot extends Bot<VillaBotConfig> {
   /** bot id */
@@ -120,7 +120,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           subtype: "group",
           channelId: eventData.SendMessage.room_id.toString(),
           content: msg.content.text,
-          // elements: parseMessage(msg),
+          elements: parseMessage(msg),
           guildId: body.event.robot.villa_id.toString(),
           messageId: eventData.SendMessage.msg_uid,
           timestamp: eventData.SendMessage.send_at,

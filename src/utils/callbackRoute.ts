@@ -1,15 +1,15 @@
 import type { Context } from "koishi";
-import type { KoaContext, koaMiddleware } from "../types";
+import type { KoaContext, KoaMiddleware } from "../types";
 import { logger } from "./logger";
 import { defineStruct } from "./defineStruct";
 import type { Callback } from "../structs";
 
-const callbacks: Record<string, koaMiddleware> = {};
+const callbacks: Record<string, KoaMiddleware> = {};
 
 export function registerCallbackRoute(
   context: Context,
   id: string,
-  callback: koaMiddleware
+  callback: KoaMiddleware
 ) {
   logger.info(`Add callback for bot ${id}`);
   callbacks[id] = callback;

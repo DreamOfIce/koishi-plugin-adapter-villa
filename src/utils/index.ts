@@ -7,3 +7,4 @@ export * from "./getGuild";
 export * from "./getUser";
 export * from "./isBot";
 export * from "./logger";
+export * from "./parseMessage";
