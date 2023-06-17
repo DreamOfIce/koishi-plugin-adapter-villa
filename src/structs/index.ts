@@ -4,6 +4,6 @@ export * from "./command";
 export * from "./group";
 export * from "./member";
 export * from "./message";
-export * from "../types";
 export * from "./room";
+export * from "../types";
 export * from "./villa";

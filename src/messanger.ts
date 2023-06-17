@@ -5,7 +5,7 @@ import type { VillaBot } from "./bot";
 
 export class VillaMessanger extends Messenger<VillaBot> {
   declare guildId: string;
-  private msg: Message.MsgContentInfo = {
+  private msg: Message.MsgContentInfo<Message.TextMsgContent> = {
     content: {
       text: "",
       entities: [],
@@ -22,7 +22,10 @@ export class VillaMessanger extends Messenger<VillaBot> {
     super(bot, channelId, guildId, options);
   }
 
-  public override async flush(): Promise<void> {
+  public override async flush(
+    msg: Message.MsgContentInfo = this.msg,
+    type: Message.MessageType = Message.MessageType.text
+  ): Promise<void> {
     const session = this.bot.session(this.session);
     try {
       logger.debug(
@@ -34,8 +37,8 @@ export class VillaMessanger extends Messenger<VillaBot> {
         "/vila/api/bot/platform/sendMessage",
         defineStruct<Message.Request>({
           room_id: Number(this.channelId),
-          object_name: Message.MessageType.text,
-          msg_content: JSON.stringify(this.msg),
+          object_name: type,
+          msg_content: JSON.stringify(msg),
         }),
         {
           headers: {
@@ -169,7 +172,25 @@ export class VillaMessanger extends Messenger<VillaBot> {
         });
         break;
       }
-      case "image":
+      // @ts-expect-error We want the non-remote image to continue with the next fallback
+      case "image": {
+        const url = (element.attrs as Dict<string, "url">)["url"];
+        if (
+          new URL(url).protocol === "http" ||
+          new URL(url).protocol === "https"
+        ) {
+          if (this.msg.content.text.length > 0) await this.flush();
+          const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
+            content: {
+              url,
+            },
+          };
+          await this.flush(msg, Message.MessageType.image);
+          break;
+        }
+        logger.warn(`Currently villa only support remote image`);
+      }
+      // eslint-disable-next-line no-fallthrough
       case "audio":
       case "video":
       case "file": {
@@ -177,7 +198,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
         logger.warn(
           `Media Element <${element.type}> is not currently support by villa bot`
         );
-        this.msg.content.text += `![${element.type}](${
+        this.msg.content.text += `![${element.type}-${element.type}](${
           /^(https?:\/\/)/i.test(url) ? url : `raw`
         })\n`;
         break;

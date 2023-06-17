@@ -20,7 +20,7 @@ import {
   removeCallbackRoute,
 } from "./utils";
 import type { KoaContext } from "./types";
-import { Callback } from "./structs";
+import { Callback, Message } from "./structs";
 import { VillaMessanger } from "./messanger";
 
 export class VillaBot extends Bot<VillaBotConfig> {
@@ -119,8 +119,12 @@ export class VillaBot extends Bot<VillaBotConfig> {
           type: "message",
           subtype: "group",
           channelId: eventData.SendMessage.room_id.toString(),
-          content: msg.content.text,
-          elements: parseMessage(msg),
+          content:
+            eventData.SendMessage.object_name ===
+            Callback.MessageNumberType.text
+              ? (msg.content as Message.TextMsgContent).text
+              : "",
+          elements: parseMessage(eventData.SendMessage.object_name, msg),
           guildId: body.event.robot.villa_id.toString(),
           messageId: eventData.SendMessage.msg_uid,
           timestamp: eventData.SendMessage.send_at,

@@ -50,7 +50,7 @@ export namespace Callback {
       from_user_id: number;
       send_at: number;
       room_id: number;
-      object_name: 1;
+      object_name: MessageNumberType;
       nickname: string;
       msg_uid: string;
       bot_msg_id: string;
@@ -82,7 +82,14 @@ export namespace Callback {
     };
   }
 
-  export interface MsgContentInfo extends Message.MsgContentInfo {
+  export enum MessageNumberType {
+    text = 1,
+    image = 2,
+  }
+
+  export interface MsgContentInfo<
+    T extends Message.MsgContent = Message.MsgContent
+  > extends Message.MsgContentInfo<T> {
     user: {
       /** avatar url */
       portraitUri: string;

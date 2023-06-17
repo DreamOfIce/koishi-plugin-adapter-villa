@@ -10,10 +10,11 @@ export namespace Message {
 
   export enum MessageType {
     text = "MHY:Text",
+    image = "MHY:Image",
   }
 
-  export interface MsgContentInfo {
-    content: MsgContent;
+  export interface MsgContentInfo<T extends MsgContent = MsgContent> {
+    content: T;
     mentionedInfo?: MentionedInfo;
     quote?: QuoteInfo;
   }
@@ -43,7 +44,7 @@ export namespace Message {
     original_message_send_time: string;
   }
 
-  export type MsgContent = TextMsgContent;
+  export type MsgContent = TextMsgContent | ImageMsgContent;
 
   export interface TextMsgContent {
     text: string;
@@ -57,13 +58,13 @@ export namespace Message {
   }
 
   export type Entity =
-    | Entities.MentionedRobotEntity
-    | Entities.MentionedUserEntity
-    | Entities.MentionedAllEntity
-    | Entities.VillaRoomEntity
-    | Entities.LinkEntity;
+    | TextEntities.MentionedRobotEntity
+    | TextEntities.MentionedUserEntity
+    | TextEntities.MentionedAllEntity
+    | TextEntities.VillaRoomEntity
+    | TextEntities.LinkEntity;
 
-  export namespace Entities {
+  export namespace TextEntities {
     export interface MentionedRobotEntity {
       type: "mentioned_robot";
       bot_id: string;
@@ -84,6 +85,15 @@ export namespace Message {
       type: "link";
       url: string;
     }
+  }
+
+  export interface ImageMsgContent {
+    url: string;
+    size?: {
+      width: number;
+      height: number;
+    };
+    file_size?: number;
   }
 
   export type Response = VillaResponse<{
