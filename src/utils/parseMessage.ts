@@ -1,6 +1,8 @@
 import { type Dict, type Element, h } from "koishi";
 import { Callback, Message } from "../structs";
 
+const postPrefix = "https://www.miyoushe.com/dby/article/";
+
 const emojiRegExp =
   /\[([\p{Unified_Ideograph}A-z0-9][\p{Unified_Ideograph}\w ]+[\p{Unified_Ideograph}A-z0-9])\]/gu;
 
@@ -89,6 +91,10 @@ export const parseMessage = (
       return parseImageMessage(
         msg as Message.MsgContentInfo<Message.ImageMsgContent>
       );
+    case Callback.MessageNumberType.post:
+      return parsePostMessage(
+        msg as Message.MsgContentInfo<Message.PostMsgContent>
+      );
   }
 };
 
@@ -109,8 +115,6 @@ export const parseTextMessage = (
   let unclosedElements: Message.TextEntity[] = [];
 
   for (; i < text.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const c = text[i]!;
     unclosedElements = unclosedElements.filter((entity) => {
       if (entity.offset === i - 1) {
         addEndTag({ elementsStr, entity });
@@ -123,7 +127,9 @@ export const parseTextMessage = (
     for (const entity of entities.filter((e) => e.offset === i)) {
       switch (entity.entity.type) {
         case "mentioned_robot": {
-          const name = text.slice(entity.offset, entity.offset + entity.length);
+          const name = text
+            .slice(entity.offset, entity.offset + entity.length)
+            .trim();
           elementsStr += `<at id="${h.escape(
             entity.entity.bot_id,
             true
@@ -135,7 +141,9 @@ export const parseTextMessage = (
           break;
         }
         case "mentioned_user": {
-          const name = text.slice(entity.offset, entity.offset + entity.length);
+          const name = text
+            .slice(entity.offset, entity.offset + entity.length)
+            .trim();
           elementsStr += `<at id="${h.escape(
             entity.entity.user_id,
             true
@@ -147,7 +155,9 @@ export const parseTextMessage = (
           break;
         }
         case "mentioned_all": {
-          const name = text.slice(entity.offset, entity.offset + entity.length);
+          const name = text
+            .slice(entity.offset, entity.offset + entity.length)
+            .trim();
           elementsStr += `<at type="all" name="${h.escape(
             name.startsWith("@") ? name.slice(1) : name,
             true
@@ -172,11 +182,15 @@ export const parseTextMessage = (
         case "link": {
           elementsStr += `<a href="${h.escape(entity.entity.url)}">`;
           unclosedElements.unshift(entity);
-          elementsStr += h.escape(c);
           break;
         }
+        default:
+          continue;
       }
+      break;
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    elementsStr += h.escape(text[i]!);
   }
 
   // replace emojis
@@ -205,3 +219,12 @@ export const parseTextMessage = (
 export const parseImageMessage = (
   msg: Message.MsgContentInfo<Message.ImageMsgContent>
 ): Element[] => [h("image", { url: msg.content.url })];
+
+/**
+ * Parse message of type "MHY:Post"
+ * @param msg message content
+ * @returns Koishi elements array
+ */
+export const parsePostMessage = (
+  msg: Message.MsgContentInfo<Message.PostMsgContent>
+): Element[] => [h("a", { href: `${postPrefix}${msg.content.post_id}` })];

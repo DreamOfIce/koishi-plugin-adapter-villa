@@ -11,6 +11,7 @@ export namespace Message {
   export enum MessageType {
     text = "MHY:Text",
     image = "MHY:Image",
+    post = "MHY:Post",
   }
 
   export interface MsgContentInfo<T extends MsgContent = MsgContent> {
@@ -44,7 +45,7 @@ export namespace Message {
     original_message_send_time: string;
   }
 
-  export type MsgContent = TextMsgContent | ImageMsgContent;
+  export type MsgContent = TextMsgContent | ImageMsgContent | PostMsgContent;
 
   export interface TextMsgContent {
     text: string;
@@ -94,6 +95,10 @@ export namespace Message {
       height: number;
     };
     file_size?: number;
+  }
+
+  export interface PostMsgContent {
+    post_id: string;
   }
 
   export type Response = VillaResponse<{

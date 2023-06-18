@@ -85,6 +85,7 @@ export namespace Callback {
   export enum MessageNumberType {
     text = 1,
     image = 2,
+    post = 3,
   }
 
   export interface MsgContentInfo<
