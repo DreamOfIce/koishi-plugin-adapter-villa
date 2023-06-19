@@ -1,5 +1,5 @@
 import { type Dict, Element, Messenger, type SendOptions } from "koishi";
-import { Message } from "./structs";
+import { API, Message } from "./structs";
 import { defineStruct, isBot, logger } from "./utils";
 import type { VillaBot } from "./bot";
 
@@ -33,9 +33,9 @@ export class VillaMessanger extends Messenger<VillaBot> {
           this.guildId
         } room ${this.channelId}`
       );
-      const res = await this.bot.axios.post<Message.Response>(
+      const res = await this.bot.axios.post<API.SendMessage.Response>(
         "/vila/api/bot/platform/sendMessage",
-        defineStruct<Message.Request>({
+        defineStruct<API.SendMessage.Request>({
           room_id: Number(this.channelId),
           object_name: type,
           msg_content: JSON.stringify(msg),

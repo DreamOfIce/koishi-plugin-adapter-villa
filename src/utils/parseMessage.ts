@@ -1,5 +1,5 @@
 import { type Dict, type Element, h } from "koishi";
-import { Callback, Message } from "../structs";
+import { Message } from "../structs";
 
 const postPrefix = "https://www.miyoushe.com/dby/article/";
 
@@ -23,33 +23,28 @@ const preProcessingEntities = (entities: Message.TextEntity[]) => {
       if (inlineAttrEntityTypes.includes(e.entity.type)) {
         return [e];
       } else {
-        let entity = [e];
-        inlineAttrEntities.forEach((e1) => {
-          entity = entity.map((e2) => {
-            // e2 start before e1 and end in e1
-            if (
-              e2.offset < e1.offset &&
-              e2.offset + e2.length > e1.offset &&
-              e2.offset + e2.length < e1.offset + e1.length
-            )
-              return {
-                ...e2,
-                length: e1.offset - e2.offset,
-              };
-            // e2 start in e1 and end after e1
-            else if (
-              e2.offset > e1.offset &&
-              e2.offset < e1.offset + e1.length &&
-              e2.offset + e2.length > e1.offset + e1.length
-            )
-              return {
-                ...e2,
-                offset: e1.offset + e1.length,
-              };
-            else return e2;
-          });
-        });
-        return entity;
+        return inlineAttrEntities.reduce(
+          (acc, e1) => {
+            acc.forEach((e2) => {
+              // e2 start before e1 and end in e1
+              if (
+                e2.offset < e1.offset &&
+                e2.offset + e2.length > e1.offset &&
+                e2.offset + e2.length < e1.offset + e1.length
+              )
+                e2.length = e1.offset - e2.offset;
+              // e2 start in e1 and end after e1
+              else if (
+                e2.offset > e1.offset &&
+                e2.offset < e1.offset + e1.length &&
+                e2.offset + e2.length > e1.offset + e1.length
+              )
+                e2.offset = e1.offset + e1.length;
+            });
+            return acc;
+          },
+          [e]
+        );
       }
     });
 };
@@ -79,19 +74,19 @@ const addEndTag = ({
 };
 
 export const parseMessage = (
-  type: Callback.MessageNumberType,
+  type: Message.MessageNumberType,
   msg: Message.MsgContentInfo
 ): Element[] => {
   switch (type) {
-    case Callback.MessageNumberType.text:
+    case Message.MessageNumberType.text:
       return parseTextMessage(
         msg as Message.MsgContentInfo<Message.TextMsgContent>
       );
-    case Callback.MessageNumberType.image:
+    case Message.MessageNumberType.image:
       return parseImageMessage(
         msg as Message.MsgContentInfo<Message.ImageMsgContent>
       );
-    case Callback.MessageNumberType.post:
+    case Message.MessageNumberType.post:
       return parsePostMessage(
         msg as Message.MsgContentInfo<Message.PostMsgContent>
       );

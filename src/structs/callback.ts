@@ -50,7 +50,7 @@ export namespace Callback {
       from_user_id: number;
       send_at: number;
       room_id: number;
-      object_name: MessageNumberType;
+      object_name: Message.MessageNumberType;
       nickname: string;
       msg_uid: string;
       bot_msg_id: string;
@@ -80,12 +80,6 @@ export namespace Callback {
       pass_through: string;
       audit_result: 0 | 1 | 2;
     };
-  }
-
-  export enum MessageNumberType {
-    text = 1,
-    image = 2,
-    post = 3,
   }
 
   export interface MsgContentInfo<

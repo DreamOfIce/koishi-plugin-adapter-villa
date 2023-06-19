@@ -1,17 +1,14 @@
-import type { VillaResponse } from "../types";
-
 export namespace Message {
-  export interface Request {
-    room_id: number;
-    object_name: MessageType;
-    /** serialized string of @see {@link MsgContentInfo} */
-    msg_content: string;
-  }
-
   export enum MessageType {
     text = "MHY:Text",
     image = "MHY:Image",
     post = "MHY:Post",
+  }
+
+  export enum MessageNumberType {
+    text = 1,
+    image = 2,
+    post = 3,
   }
 
   export interface MsgContentInfo<T extends MsgContent = MsgContent> {
@@ -100,8 +97,4 @@ export namespace Message {
   export interface PostMsgContent {
     post_id: string;
   }
-
-  export type Response = VillaResponse<{
-    bot_msg_id: string;
-  }>;
 }

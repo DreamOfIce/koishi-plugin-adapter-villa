@@ -1,4 +1,5 @@
 import { Room } from "./room";
+
 export namespace Group {
   export interface Group {
     group_id: string;

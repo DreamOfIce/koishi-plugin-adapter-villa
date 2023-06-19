@@ -1,5 +1,5 @@
 import type { Room } from "..";
-import type { VillaResponse } from "../../types";
+import type { VillaResponse } from "./response";
 
 export namespace GetRoom {
   export interface Params {

@@ -120,8 +120,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           subtype: "group",
           channelId: eventData.SendMessage.room_id.toString(),
           content:
-            eventData.SendMessage.object_name ===
-            Callback.MessageNumberType.text
+            eventData.SendMessage.object_name === Message.MessageNumberType.text
               ? (msg.content as Message.TextMsgContent).text
               : "",
           elements: parseMessage(eventData.SendMessage.object_name, msg),

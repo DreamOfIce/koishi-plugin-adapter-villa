@@ -1,4 +1,4 @@
-import type { VillaResponse } from "../types";
+import type { VillaResponse } from "./api";
 
 export namespace Villa {
   export type Response = VillaResponse<{
