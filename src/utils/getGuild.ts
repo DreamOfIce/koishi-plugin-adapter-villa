@@ -1,13 +1,13 @@
 import type { Universal } from "koishi";
 import type { VillaBot } from "../bot";
-import type { Villa } from "../structs";
+import type { API } from "../structs";
 import { logger } from "./logger";
 
 export async function getGuild(
   this: VillaBot,
   guildId: string
 ): Promise<Universal.Guild> {
-  const res = await this.axios.get<Villa.Response>(
+  const res = await this.axios.get<API.GetVilla.Response>(
     "/vila/api/bot/platform/getVilla",
     {
       headers: {

@@ -6,4 +6,3 @@ export * from "./member";
 export * from "./message";
 export * from "./room";
 export * from "../types";
-export * from "./villa";

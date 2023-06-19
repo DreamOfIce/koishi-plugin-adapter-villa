@@ -32,7 +32,6 @@ export async function getGuildMemberList(
       logger.warn(
         `Failed to get members of villa ${guildId}: ${res.message}(${res.retcode})`
       );
-      return members;
     }
 
     offset = Number(res.data.next_offset_str);

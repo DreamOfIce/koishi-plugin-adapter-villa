@@ -1,6 +1,6 @@
-import type { VillaResponse } from "./api";
+import type { VillaResponse } from "./response";
 
-export namespace Villa {
+export namespace GetVilla {
   export type Response = VillaResponse<{
     villa: {
       villa_id: number;
