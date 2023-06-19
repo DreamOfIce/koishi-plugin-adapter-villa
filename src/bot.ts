@@ -13,6 +13,7 @@ import {
   getChannel,
   getChannelList,
   getGuild,
+  getGuildMemberList,
   getUser,
   logger,
   parseMessage,
@@ -176,9 +177,17 @@ export class VillaBot extends Bot<VillaBotConfig> {
     }
   }
 
+  public override getGuildMember(
+    guildId: string,
+    userId: string
+  ): Promise<Universal.GuildMember> {
+    return this.getUser(userId, guildId);
+  }
+
   public override getChannel = getChannel;
   public override getChannelList = getChannelList;
   public override getGuild = getGuild;
+  public override getGuildMemberList = getGuildMemberList;
   public override getUser = getUser;
 
   public override platform = "villa";

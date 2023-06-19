@@ -4,6 +4,7 @@ export * from "./defineStruct";
 export * from "./getChannel";
 export * from "./getChannelList";
 export * from "./getGuild";
+export * from "./getGuildMemberList";
 export * from "./getUser";
 export * from "./isBot";
 export * from "./logger";
