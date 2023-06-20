@@ -26,36 +26,41 @@ export class VillaMessanger extends Messenger<VillaBot> {
     msg: Message.MsgContentInfo = this.msg,
     type: Message.MessageType = Message.MessageType.text
   ): Promise<void> {
-    const session = this.bot.session(this.session);
     try {
-      logger.debug(
-        `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
-          this.guildId
-        } room ${this.channelId}`
-      );
-      const res = await this.bot.axios.post<API.SendMessage.Response>(
-        "/vila/api/bot/platform/sendMessage",
-        defineStruct<API.SendMessage.Request>({
-          room_id: Number(this.channelId),
-          object_name: type,
-          msg_content: JSON.stringify(msg),
-        }),
-        {
-          headers: {
-            "x-rpc-bot_villa_id": this.guildId,
-          },
-        }
-      );
-      if (res.retcode !== 0) {
-        throw new Error(
-          `Failed to send message '${this.msg.content.text}': ${res.message}(${res.retcode})`
+      if (
+        type !== Message.MessageType.text ||
+        (msg.content as Message.TextMsgContent).text.length > 0
+      ) {
+        const session = this.bot.session(this.session);
+        logger.debug(
+          `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
+            this.guildId
+          } room ${this.channelId}`
         );
+        const res = await this.bot.axios.post<API.SendMessage.Response>(
+          "/vila/api/bot/platform/sendMessage",
+          defineStruct<API.SendMessage.Request>({
+            room_id: Number(this.channelId),
+            object_name: type,
+            msg_content: JSON.stringify(msg),
+          }),
+          {
+            headers: {
+              "x-rpc-bot_villa_id": this.guildId,
+            },
+          }
+        );
+        if (res.retcode !== 0) {
+          throw new Error(
+            `Failed to send message '${this.msg.content.text}': ${res.message}(${res.retcode})`
+          );
+        }
+        session.messageId = res.data.bot_msg_id;
+        session.timestamp = new Date().getTime();
+        session.userId = this.bot.userId;
+        this.results.push(session);
+        session.app.emit(session, "send", session);
       }
-      session.messageId = res.data.bot_msg_id;
-      session.timestamp = new Date().getTime();
-      session.userId = this.bot.userId;
-      this.results.push(session);
-      session.app.emit(session, "send", session);
     } catch (err) {
       if (err instanceof Error) this.errors.push(err);
     } finally {
@@ -176,10 +181,10 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "image": {
         const url = (element.attrs as Dict<string, "url">)["url"];
         if (
-          new URL(url).protocol === "http" ||
-          new URL(url).protocol === "https"
+          new URL(url).protocol === "http:" ||
+          new URL(url).protocol === "https:"
         ) {
-          if (this.msg.content.text.length > 0) await this.flush();
+          await this.flush();
           const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
             content: {
               url,
