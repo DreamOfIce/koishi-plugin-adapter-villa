@@ -1,3 +1,22 @@
+## [0.2.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.1.1...v0.2.0) (2023-06-20)
+
+### Features
+
+- export utils ([c7a184b](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/c7a184b2cba31ed56ed4defcd9bba0a966497ea4))
+- **messanger:** ignore null message ([7ca4671](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/7ca46716fff08f23626bb8e9abb0f1f5079b449d))
+- support custom callback path ([25cff20](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/25cff202ef967f875926d4dcfa72bc553cd162bd))
+- support getChannelList() ([ddaaa67](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/ddaaa67b660b3fdfd561ea0db49e86de23d5fbbf))
+- support getGuildMemberList() ([7e914a9](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/7e914a9ef639371d5efa40187d294f25a6024d2d))
+- support guild-added and guild-deleted ([5fcd108](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/5fcd108864e38a719ea13043fed7646f9114572a))
+- support image message ([60d127b](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/60d127bc6048e513d111af553c7e9f5fe7d52034))
+- support session.elements ([9b93b7c](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/9b93b7cb047c906dfa31e199cef00e3eea0c19d5))
+
+### Bug Fixes
+
+- fix a typo error ([ea4bfc9](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/ea4bfc9c304cf9c180ce367357f4cd696fde5805))
+- fix message parse error ([7574b86](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/7574b867d80ddc93a12e4715172fc597f8c51de9))
+- **messanger:** fix a typo error ([b376f02](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/b376f02156966b3706050ddd86dd06703d6bef55))
+
 ## [0.1.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.1.0...v0.1.1) (2023-06-08)
 
 ### Bug Fixes
