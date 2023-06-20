@@ -7,13 +7,14 @@ import type { Callback } from "../structs";
 const callbacks: Record<string, KoaMiddleware> = {};
 
 export function registerCallbackRoute(
+  path: string,
   context: Context,
   id: string,
   callback: KoaMiddleware
 ) {
   logger.info(`Add callback for bot ${id}`);
   callbacks[id] = callback;
-  context.router.post("/villa", async function (ctx: KoaContext, next) {
+  context.router.post(path, async function (ctx: KoaContext, next) {
     const botId = ctx.request.body?.event?.robot?.template?.id;
     const [, callback] =
       Object.entries(callbacks).find(([id]) => id === botId) ?? [];

@@ -54,7 +54,12 @@ export class VillaBot extends Bot<VillaBotConfig> {
 
   public override async start(): Promise<void> {
     await super.start();
-    registerCallbackRoute(this.ctx, this.id, this.handleCallback.bind(this));
+    registerCallbackRoute(
+      this.config.path,
+      this.ctx,
+      this.id,
+      this.handleCallback.bind(this)
+    );
   }
 
   public override async stop(): Promise<void> {
