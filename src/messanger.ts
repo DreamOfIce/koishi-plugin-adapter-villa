@@ -176,8 +176,8 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "image": {
         const url = (element.attrs as Dict<string, "url">)["url"];
         if (
-          new URL(url).protocol === "http" ||
-          new URL(url).protocol === "https"
+          new URL(url).protocol === "http:" ||
+          new URL(url).protocol === "https:"
         ) {
           if (this.msg.content.text.length > 0) await this.flush();
           const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
