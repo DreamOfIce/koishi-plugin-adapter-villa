@@ -27,7 +27,10 @@ export class VillaMessanger extends Messenger<VillaBot> {
     type: Message.MessageType = Message.MessageType.text
   ): Promise<void> {
     try {
-      if (this.msg.content.text.length > 0) {
+      if (
+        type !== Message.MessageType.text ||
+        (msg.content as Message.TextMsgContent).text.length > 0
+      ) {
         const session = this.bot.session(this.session);
         logger.debug(
           `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
