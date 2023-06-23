@@ -115,6 +115,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
         const msg = JSON.parse(
           eventData.SendMessage.content
         ) as Callback.MsgContentInfo;
+        const content =
+          eventData.SendMessage.object_name === Message.MessageNumberType.text
+            ? (msg.content as Message.TextMsgContent).text
+            : "";
         const session = super.session({
           author: {
             username: eventData.SendMessage.nickname,
@@ -125,10 +129,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           type: "message",
           subtype: "group",
           channelId: eventData.SendMessage.room_id.toString(),
-          content:
-            eventData.SendMessage.object_name === Message.MessageNumberType.text
-              ? (msg.content as Message.TextMsgContent).text
-              : "",
+          content,
           elements: parseMessage(eventData.SendMessage.object_name, msg),
           guildId: body.event.robot.villa_id.toString(),
           messageId: eventData.SendMessage.msg_uid,
@@ -136,7 +137,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           userId: eventData.SendMessage.from_user_id.toString(),
         });
         logger.info(
-          `Receive message '${session.content}'(${eventData.SendMessage.msg_uid})`
+          `Receive message '${content}'(${eventData.SendMessage.msg_uid})`
         );
         this.dispatch(session);
         break;

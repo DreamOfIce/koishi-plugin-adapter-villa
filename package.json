@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-adapter-villa",
   "version": "0.2.0",
-  "description": "",
+  "description": "villa adapter for Koishi",
   "keywords": [
     "adapter",
     "chatbot",
