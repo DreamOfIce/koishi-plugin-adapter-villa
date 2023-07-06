@@ -2,6 +2,7 @@ import {
   Bot,
   type Context,
   type Fragment,
+  h,
   Quester,
   type SendOptions,
   type Universal,
@@ -168,9 +169,42 @@ export class VillaBot extends Bot<VillaBotConfig> {
         this.dispatch(session);
         break;
       }
-      case Callback.RobotEventType.AddQuickEmoticon:
-        // todo
+      case Callback.RobotEventType.AddQuickEmoticon: {
+        const session = super.session({
+          type: `reaction-${
+            eventData.AddQuickEmoticon.is_cancel ? "deleted" : "added"
+          }`,
+          subtype: "group",
+          channelId: eventData.AddQuickEmoticon.room_id.toString(),
+          elements: [
+            h("face", {
+              id: eventData.AddQuickEmoticon.emoticon_id,
+              name: eventData.AddQuickEmoticon.emoticon,
+              platform: this.platform,
+            }),
+          ],
+          guildId: eventData.AddQuickEmoticon.villa_id.toString(),
+          quote: {
+            author: {
+              userId: eventData.AddQuickEmoticon.uid.toString(),
+            },
+            channelId: eventData.AddQuickEmoticon.room_id.toString(),
+            elements: [
+              h("quote", { id: eventData.AddQuickEmoticon.msg_uid.toString() }),
+            ],
+            guildId: eventData.AddQuickEmoticon.villa_id.toString(),
+            messageId: eventData.AddQuickEmoticon.msg_uid.toString(),
+            timestamp: new Date().getTime(),
+          },
+          timestamp: new Date().getTime(),
+          userId: eventData.AddQuickEmoticon.uid.toString(),
+        });
+        logger.info(
+          `Receive reaction '${eventData.AddQuickEmoticon.emoticon}' on message ${eventData.AddQuickEmoticon.msg_uid}`
+        );
+        this.dispatch(session);
         break;
+      }
       case Callback.RobotEventType.AuditCallback:
         // todo
         break;

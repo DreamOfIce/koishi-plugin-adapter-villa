@@ -4,6 +4,8 @@ github:
   release: true
 npm:
   publish: false
+hooks:
+  after:version:bump: yarn install
 plugins:
   "@release-it/conventional-changelog":
     preset: conventionalcommits
