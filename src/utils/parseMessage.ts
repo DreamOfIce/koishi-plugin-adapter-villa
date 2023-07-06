@@ -77,14 +77,28 @@ export const parseMessage = (
   type: Message.MessageNumberType,
   msg: Message.MsgContentInfo
 ): Element[] => {
+  const elements: Element[] = [];
+  if (msg.quote) elements.push(h("quote", { id: msg.quote.quoted_message_id }));
+
   switch (type) {
     case Message.MessageNumberType.text:
-      return parseTextMessage(msg.content as Message.TextMsgContent);
+      elements.push(
+        ...parseTextMessageContent(msg.content as Message.TextMsgContent)
+      );
+      break;
     case Message.MessageNumberType.image:
-      return parseImageMessage(msg.content as Message.ImageMsgContent);
+      elements.push(
+        ...parseImageMessageContent(msg.content as Message.ImageMsgContent)
+      );
+      break;
     case Message.MessageNumberType.post:
-      return parsePostMessage(msg.content as Message.PostMsgContent);
+      elements.push(
+        ...parsePostMessageContent(msg.content as Message.PostMsgContent)
+      );
+      break;
   }
+
+  return elements;
 };
 
 /**
@@ -92,7 +106,7 @@ export const parseMessage = (
  * @param content message content
  * @returns Koishi elements array
  */
-export const parseTextMessage = (
+export const parseTextMessageContent = (
   content: Message.TextMsgContent
 ): Element[] => {
   let elementsStr = "";
@@ -205,7 +219,7 @@ export const parseTextMessage = (
  * @param content message content
  * @returns Koishi elements array
  */
-export const parseImageMessage = (
+export const parseImageMessageContent = (
   content: Message.ImageMsgContent
 ): Element[] => [h("image", { url: content.url })];
 
@@ -214,6 +228,6 @@ export const parseImageMessage = (
  * @param content message content
  * @returns Koishi elements array
  */
-export const parsePostMessage = (
+export const parsePostMessageContent = (
   content: Message.PostMsgContent
 ): Element[] => [h("a", { href: `${postPrefix}${content.post_id}` })];
