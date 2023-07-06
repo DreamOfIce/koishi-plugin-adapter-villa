@@ -79,33 +79,27 @@ export const parseMessage = (
 ): Element[] => {
   switch (type) {
     case Message.MessageNumberType.text:
-      return parseTextMessage(
-        msg as Message.MsgContentInfo<Message.TextMsgContent>
-      );
+      return parseTextMessage(msg.content as Message.TextMsgContent);
     case Message.MessageNumberType.image:
-      return parseImageMessage(
-        msg as Message.MsgContentInfo<Message.ImageMsgContent>
-      );
+      return parseImageMessage(msg.content as Message.ImageMsgContent);
     case Message.MessageNumberType.post:
-      return parsePostMessage(
-        msg as Message.MsgContentInfo<Message.PostMsgContent>
-      );
+      return parsePostMessage(msg.content as Message.PostMsgContent);
   }
 };
 
 /**
  * Parse message of type "MHY:Text"
- * @param msg message content
+ * @param content message content
  * @returns Koishi elements array
  */
 export const parseTextMessage = (
-  msg: Message.MsgContentInfo<Message.TextMsgContent>
+  content: Message.TextMsgContent
 ): Element[] => {
   let elementsStr = "";
   let i = 0;
 
-  const { text } = msg.content;
-  const entities = preProcessingEntities(msg.content.entities);
+  const { text } = content;
+  const entities = preProcessingEntities(content.entities);
 
   let unclosedElements: Message.TextEntity[] = [];
 
@@ -208,18 +202,18 @@ export const parseTextMessage = (
 
 /**
  * Parse message of type "MHY:Image"
- * @param msg message content
+ * @param content message content
  * @returns Koishi elements array
  */
 export const parseImageMessage = (
-  msg: Message.MsgContentInfo<Message.ImageMsgContent>
-): Element[] => [h("image", { url: msg.content.url })];
+  content: Message.ImageMsgContent
+): Element[] => [h("image", { url: content.url })];
 
 /**
  * Parse message of type "MHY:Post"
- * @param msg message content
+ * @param content message content
  * @returns Koishi elements array
  */
 export const parsePostMessage = (
-  msg: Message.MsgContentInfo<Message.PostMsgContent>
-): Element[] => [h("a", { href: `${postPrefix}${msg.content.post_id}` })];
+  content: Message.PostMsgContent
+): Element[] => [h("a", { href: `${postPrefix}${content.post_id}` })];
