@@ -59,7 +59,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "husky": "^8.0.3",
-    "koishi": "^4.13.5",
+    "koishi": "^4.13.6",
     "nano-staged": "^0.8.0",
     "pinst": "^3.0.0",
     "prettier": "^2.8.8",
