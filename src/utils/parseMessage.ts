@@ -177,9 +177,6 @@ export const parseTextMessageContent = (
           elementsStr += `<sharp id="${h.escape(
             `${entity.entity.villa_id}:${entity.entity.room_id}`,
             true
-          )}" guild="${h.escape(
-            entity.entity.villa_id,
-            true
           )}" name="${h.escape(
             text.slice(entity.offset, entity.length),
             true

@@ -142,6 +142,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
           name = `#${(await this.bot.getChannel(id)).channelName ?? id}`,
         } = element.attrs as Dict<string, "id" | "name" | "guild">;
         const [villaId, roomId] = id.split(":") as [string, string];
+
         this.msg.content.text += name;
         this.msg.content.entities.push({
           offset,
