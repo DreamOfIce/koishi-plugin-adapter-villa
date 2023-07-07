@@ -12,3 +12,4 @@ plugins:
 rules:
   "@typescript-eslint/no-namespace": off
   "@typescript-eslint/require-await": off
+  "@typescript-eslint/no-non-null-assertion": off

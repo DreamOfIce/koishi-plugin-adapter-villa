@@ -133,7 +133,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           content,
           elements: parseMessage(eventData.SendMessage.object_name, msg),
           guildId: body.event.robot.villa_id.toString(),
-          messageId: eventData.SendMessage.msg_uid,
+          messageId: `${eventData.SendMessage.msg_uid}:${eventData.SendMessage.send_at}`,
           timestamp: eventData.SendMessage.send_at,
           userId: eventData.SendMessage.from_user_id.toString(),
         });
@@ -193,7 +193,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
               h("quote", { id: eventData.AddQuickEmoticon.msg_uid.toString() }),
             ],
             guildId: eventData.AddQuickEmoticon.villa_id.toString(),
-            messageId: eventData.AddQuickEmoticon.msg_uid.toString(),
+            messageId: `${eventData.AddQuickEmoticon.msg_uid}:0`,
             timestamp: new Date().getTime(),
           },
           timestamp: new Date().getTime(),

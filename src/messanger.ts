@@ -31,7 +31,6 @@ export class VillaMessanger extends Messenger<VillaBot> {
         type !== Message.MessageType.text ||
         (msg.content as Message.TextMsgContent).text.length > 0
       ) {
-        const session = this.bot.session(this.session);
         logger.debug(
           `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
             this.guildId
@@ -55,7 +54,9 @@ export class VillaMessanger extends Messenger<VillaBot> {
             `Failed to send message '${this.msg.content.text}': ${res.message}(${res.retcode})`
           );
         }
-        session.messageId = res.data.bot_msg_id;
+
+        const session = this.bot.session(this.session);
+        session.messageId = `${res.data.bot_msg_id}:bot_msg`;
         session.timestamp = new Date().getTime();
         session.userId = this.bot.userId;
         this.results.push(session);
@@ -162,7 +163,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
         await this.render(element.children);
         if (this.msg !== currentMsg) {
           logger.warn(
-            `The message is flushed when rendering the child elements of <a>`
+            `Message is flushed when rendering the child elements of <a>`
           );
           break;
         }
@@ -230,11 +231,20 @@ export class VillaMessanger extends Messenger<VillaBot> {
         break;
       }
       case "quote": {
+        const [id, timestamp] = (element.attrs as Dict<string, "id">)[
+          "id"
+        ].split(":") as [string, string];
+
+        if (timestamp === "bot_msg") {
+          logger.warn(`Quote with bot msg id is not support!`);
+          this.errors.push(Error("Quote with bot msg id is not support!"));
+        }
+
         this.msg.quote = {
-          quoted_message_id: (element.attrs as Dict<string, "id">)["id"],
-          quoted_message_send_time: new Date().getTime().toString(),
-          original_message_id: (element.attrs as Dict<string, "id">)["id"],
-          original_message_send_time: new Date().getTime().toString(),
+          quoted_message_id: id,
+          quoted_message_send_time: timestamp,
+          original_message_id: id,
+          original_message_send_time: timestamp,
         };
         break;
       }

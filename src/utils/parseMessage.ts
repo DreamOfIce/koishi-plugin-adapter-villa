@@ -78,7 +78,12 @@ export const parseMessage = (
   msg: Message.MsgContentInfo
 ): Element[] => {
   const elements: Element[] = [];
-  if (msg.quote) elements.push(h("quote", { id: msg.quote.quoted_message_id }));
+  if (msg.quote)
+    elements.push(
+      h("quote", {
+        id: `${msg.quote.quoted_message_id}:${msg.quote.quoted_message_send_time}`,
+      })
+    );
 
   switch (type) {
     case Message.MessageNumberType.text:
@@ -192,7 +197,6 @@ export const parseTextMessageContent = (
       }
       break;
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     elementsStr += h.escape(text[i]!);
   }
 
