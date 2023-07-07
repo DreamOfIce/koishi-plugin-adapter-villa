@@ -4,7 +4,8 @@ import { defineStruct, isBot, logger } from "./utils";
 import type { VillaBot } from "./bot";
 
 export class VillaMessanger extends Messenger<VillaBot> {
-  declare guildId: string;
+  private villaId: string;
+  private roomId: string;
   private msg: Message.MsgContentInfo<Message.TextMsgContent> = {
     content: {
       text: "",
@@ -20,6 +21,8 @@ export class VillaMessanger extends Messenger<VillaBot> {
   ) {
     if (!guildId) throw new Error("Villa doesn't support private message now");
     super(bot, channelId, guildId, options);
+
+    [this.villaId, this.roomId] = channelId.split(":") as [string, string];
   }
 
   public override async flush(
@@ -33,19 +36,19 @@ export class VillaMessanger extends Messenger<VillaBot> {
       ) {
         logger.debug(
           `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
-            this.guildId
-          } room ${this.channelId}`
+            this.villaId
+          } room ${this.roomId}`
         );
         const res = await this.bot.axios.post<API.SendMessage.Response>(
           "/vila/api/bot/platform/sendMessage",
           defineStruct<API.SendMessage.Request>({
-            room_id: Number(this.channelId),
+            room_id: Number(this.roomId),
             object_name: type,
             msg_content: JSON.stringify(msg),
           }),
           {
             headers: {
-              "x-rpc-bot_villa_id": this.guildId,
+              "x-rpc-bot_villa_id": this.villaId,
             },
           }
         );
@@ -135,18 +138,18 @@ export class VillaMessanger extends Messenger<VillaBot> {
       }
       case "sharp": {
         const {
-          guild = this.guildId, // a custom attr
           id,
-          name = `#${(await this.bot.getChannel(id, guild)).channelName ?? id}`,
+          name = `#${(await this.bot.getChannel(id)).channelName ?? id}`,
         } = element.attrs as Dict<string, "id" | "name" | "guild">;
+        const [villaId, roomId] = id.split(":") as [string, string];
         this.msg.content.text += name;
         this.msg.content.entities.push({
           offset,
           length: name.length,
           entity: {
             type: "villa_room_link",
-            room_id: id,
-            villa_id: guild,
+            room_id: roomId,
+            villa_id: villaId,
           },
         });
         break;

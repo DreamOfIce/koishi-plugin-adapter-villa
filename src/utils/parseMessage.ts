@@ -175,7 +175,7 @@ export const parseTextMessageContent = (
         }
         case "villa_room_link": {
           elementsStr += `<sharp id="${h.escape(
-            entity.entity.room_id,
+            `${entity.entity.villa_id}:${entity.entity.room_id}`,
             true
           )}" guild="${h.escape(
             entity.entity.villa_id,

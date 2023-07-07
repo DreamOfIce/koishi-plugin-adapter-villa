@@ -75,7 +75,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
   public override sendMessage(
     channelId: string,
     content: Fragment,
-    guildId: string | undefined,
+    guildId?: string | undefined,
     options?: SendOptions | undefined
   ): Promise<string[]> {
     return new VillaMessanger(this, channelId, guildId, options).send(content);
@@ -129,7 +129,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           },
           type: "message",
           subtype: "group",
-          channelId: eventData.SendMessage.room_id.toString(),
+          channelId: `${body.event.robot.villa_id}:${eventData.SendMessage.room_id}`,
           content,
           elements: parseMessage(eventData.SendMessage.object_name, msg),
           guildId: body.event.robot.villa_id.toString(),
@@ -175,7 +175,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
             eventData.AddQuickEmoticon.is_cancel ? "deleted" : "added"
           }`,
           subtype: "group",
-          channelId: eventData.AddQuickEmoticon.room_id.toString(),
+          channelId: `${eventData.AddQuickEmoticon.villa_id}:${eventData.AddQuickEmoticon.room_id}`,
           elements: [
             h("face", {
               id: eventData.AddQuickEmoticon.emoticon_id,
@@ -188,7 +188,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
             author: {
               userId: eventData.AddQuickEmoticon.uid.toString(),
             },
-            channelId: eventData.AddQuickEmoticon.room_id.toString(),
+            channelId: `${eventData.AddQuickEmoticon.villa_id}:${eventData.AddQuickEmoticon.room_id}`,
             elements: [
               h("quote", { id: eventData.AddQuickEmoticon.msg_uid.toString() }),
             ],
