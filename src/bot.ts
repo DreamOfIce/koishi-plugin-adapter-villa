@@ -11,6 +11,7 @@ import { VillaBotConfig } from "./config";
 import {
   createAxios,
   defineStruct,
+  deleteMessage,
   getChannel,
   getChannelList,
   getGuild,
@@ -224,6 +225,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     return this.getUser(userId, guildId);
   }
 
+  public override deleteMessage = deleteMessage;
   public override getChannel = getChannel;
   public override getChannelList = getChannelList;
   public override getGuild = getGuild;

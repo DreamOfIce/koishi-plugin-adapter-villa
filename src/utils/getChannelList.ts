@@ -18,7 +18,7 @@ export async function getChannelList(
 
   if (res.retcode !== 0) {
     logger.warn(
-      `Failed to get room list of${guildId}: ${res.message}(${res.retcode})`
+      `Failed to get room list of ${guildId}: ${res.message}(${res.retcode})`
     );
   }
 

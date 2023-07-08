@@ -1,6 +1,7 @@
 export * from "./callbackRoute";
 export * from "./createAxios";
 export * from "./defineStruct";
+export * from "./deleteMessage";
 export * from "./getChannel";
 export * from "./getChannelList";
 export * from "./getGuild";
