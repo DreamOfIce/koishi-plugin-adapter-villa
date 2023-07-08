@@ -1,3 +1,20 @@
+## [0.3.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.2.0...v0.3.0) (2023-07-08)
+
+### ⚠ BREAKING CHANGES
+
+- use '~' as splitter of msgId and channelId
+- add villa id to channelId
+- add timestamp to message id
+
+### Features
+
+- add timestamp to message id ([b3cc6f1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/b3cc6f1435898e4d4ac89cad47437df950eaca1f))
+- add villa id to channelId ([fd38b22](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/fd38b220115a34e800efadccbd01994e393d39ab))
+- support delete message ([53f81f6](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/53f81f6b6db9aa60899bc25fcebfd5ff82f4a7a0))
+- support parsing quote info ([f403896](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/f4038966ea414f48550a191187827534f8b67fa7))
+- support reaction ([bb36838](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/bb368387f5856d57dae7fe44a86200e959f50a79))
+- use '~' as splitter of msgId and channelId ([8c4c71a](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/8c4c71a806379588315de8d8230df888f56e1222))
+
 ## [0.2.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.1.1...v0.2.0) (2023-06-20)
 
 ### Features
