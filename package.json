@@ -19,7 +19,11 @@
     "url": "git+https://github.com/DreamOfIce/koishi-plugin-adapter-villa.git"
   },
   "license": "MIT",
-  "author": "冰雪殇璃陌梦 <admin@dreamofice.cn> (https://www.dreamofice.cn)",
+  "author": {
+    "name": "冰雪殇璃陌梦",
+    "email": "admin@dreamofice.cn",
+    "url": "https://www.dreamofice.cn"
+  },
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",
   "types": "./lib/index.d.ts",
