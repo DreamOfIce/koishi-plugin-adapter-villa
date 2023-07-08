@@ -27,7 +27,7 @@ export async function getChannelList(
   res.data.list.forEach((group) =>
     group.room_list.forEach((room) =>
       channels.push({
-        channelId: `${guildId}:${room.room_id}`,
+        channelId: `${guildId}~${room.room_id}`,
         channelName: room.room_name,
       })
     )

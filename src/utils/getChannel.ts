@@ -8,7 +8,7 @@ export async function getChannel(
   this: VillaBot,
   channelId: string
 ): Promise<Universal.Channel> {
-  const [villaId, roomId] = channelId.split(":") as [string, string];
+  const [villaId, roomId] = channelId.split("~") as [string, string];
 
   const res = await this.axios.get<API.GetRoom.Response>(
     "/vila/api/bot/platform/getVilla",

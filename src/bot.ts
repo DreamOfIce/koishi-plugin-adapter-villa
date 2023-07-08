@@ -129,11 +129,11 @@ export class VillaBot extends Bot<VillaBotConfig> {
           },
           type: "message",
           subtype: "group",
-          channelId: `${body.event.robot.villa_id}:${eventData.SendMessage.room_id}`,
+          channelId: `${body.event.robot.villa_id}~${eventData.SendMessage.room_id}`,
           content,
           elements: parseMessage(eventData.SendMessage.object_name, msg),
           guildId: body.event.robot.villa_id.toString(),
-          messageId: `${eventData.SendMessage.msg_uid}:${eventData.SendMessage.send_at}`,
+          messageId: `${eventData.SendMessage.msg_uid}~${eventData.SendMessage.send_at}`,
           timestamp: eventData.SendMessage.send_at,
           userId: eventData.SendMessage.from_user_id.toString(),
         });
@@ -175,7 +175,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
             eventData.AddQuickEmoticon.is_cancel ? "deleted" : "added"
           }`,
           subtype: "group",
-          channelId: `${eventData.AddQuickEmoticon.villa_id}:${eventData.AddQuickEmoticon.room_id}`,
+          channelId: `${eventData.AddQuickEmoticon.villa_id}~${eventData.AddQuickEmoticon.room_id}`,
           elements: [
             h("face", {
               id: eventData.AddQuickEmoticon.emoticon_id,
@@ -188,7 +188,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
             author: {
               userId: eventData.AddQuickEmoticon.uid.toString(),
             },
-            channelId: `${eventData.AddQuickEmoticon.villa_id}:${eventData.AddQuickEmoticon.room_id}`,
+            channelId: `${eventData.AddQuickEmoticon.villa_id}~${eventData.AddQuickEmoticon.room_id}`,
             elements: [
               h("quote", { id: eventData.AddQuickEmoticon.msg_uid.toString() }),
             ],

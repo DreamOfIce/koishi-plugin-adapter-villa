@@ -22,7 +22,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
     if (!guildId) throw new Error("Villa doesn't support private message now");
     super(bot, channelId, guildId, options);
 
-    [this.villaId, this.roomId] = channelId.split(":") as [string, string];
+    [this.villaId, this.roomId] = channelId.split("~") as [string, string];
   }
 
   public override async flush(
@@ -139,9 +139,11 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "sharp": {
         const {
           id,
-          name = `#${(await this.bot.getChannel(id)).channelName ?? id}`,
+          name = `#${
+            (await this.bot.getChannel(id)).channelName ?? id.split("~")[1]!
+          }`,
         } = element.attrs as Dict<string, "id" | "name" | "guild">;
-        const [villaId, roomId] = id.split(":") as [string, string];
+        const [villaId, roomId] = id.split("~") as [string, string];
 
         this.msg.content.text += name;
         this.msg.content.entities.push({
@@ -237,7 +239,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "quote": {
         const [id, timestamp] = (element.attrs as Dict<string, "id">)[
           "id"
-        ].split(":") as [string, string];
+        ].split("~") as [string, string];
 
         if (timestamp === "bot_msg") {
           logger.warn(`Quote with bot msg id is not support!`);
