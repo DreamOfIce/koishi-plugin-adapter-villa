@@ -5,7 +5,7 @@ github:
 npm:
   publish: false
 hooks:
-  after:version:bump: yarn install
+  before:git:release: 'node --input-type module -e "await (await import(''fs/promises'')).rm(''../../package-lock.json'', {force: true})"; yarn install'
 plugins:
   "@release-it/conventional-changelog":
     preset: conventionalcommits
