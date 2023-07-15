@@ -184,25 +184,18 @@ export class VillaMessanger extends Messenger<VillaBot> {
         });
         break;
       }
-      // @ts-expect-error We want the non-remote image to continue with the next fallback
       case "image": {
         const url = (element.attrs as Dict<string, "url">)["url"];
-        if (
-          new URL(url).protocol === "http:" ||
-          new URL(url).protocol === "https:"
-        ) {
-          await this.flush();
-          const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
-            content: {
-              url,
-            },
-          };
-          await this.flush(msg, Message.MessageType.image);
-          break;
-        }
-        logger.warn(`Currently villa only support remote image`);
+        const newUrl = await this.bot.transferImage(url);
+        await this.flush();
+        const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
+          content: {
+            url: newUrl,
+          },
+        };
+        await this.flush(msg, Message.MessageType.image);
+        break;
       }
-      // eslint-disable-next-line no-fallthrough
       case "audio":
       case "video":
       case "file": {

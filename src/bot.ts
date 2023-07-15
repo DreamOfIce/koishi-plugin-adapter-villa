@@ -21,6 +21,7 @@ import {
   parseMessage,
   registerCallbackRoute,
   removeCallbackRoute,
+  transferImage,
 } from "./utils";
 import type { KoaContext } from "./types";
 import { Callback, Message } from "./structs";
@@ -224,6 +225,8 @@ export class VillaBot extends Bot<VillaBotConfig> {
   ): Promise<Universal.GuildMember> {
     return this.getUser(userId, guildId);
   }
+
+  public transferImage = transferImage;
 
   public override deleteMessage = deleteMessage;
   public override getChannel = getChannel;

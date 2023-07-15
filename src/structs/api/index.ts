@@ -6,3 +6,4 @@ export * from "./getVillaMembers";
 export * from "./recallMessage";
 export * from "./response";
 export * from "./sendMessage";
+export * from "./transferImage";

@@ -10,3 +10,4 @@ export * from "./getUser";
 export * from "./isBot";
 export * from "./logger";
 export * from "./parseMessage";
+export * from "./transferImage";
