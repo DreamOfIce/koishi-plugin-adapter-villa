@@ -12,8 +12,8 @@
 - [x] 发送图片
 - [x] bot 入群、退群通知
 - [x] 用户入群事件(`guild-member-added`)
-- [x] 表情表套
-- [ ] 回调签名验证
+- [x] 表情表态
+- [x] 回调签名验证
 - [ ] Oauth 登录
 - [ ] 权限系统
 
@@ -32,6 +32,7 @@
 |         id          | `string` |     bot_id: 机器人的唯一标志     |
 |       secret        | `string` |  bot_secret: 机器人鉴权唯一标志  |
 |        path         | `string` | 服务器监听的路径(默认为`/villa`) |
+|       pubKey        | `string` |           机器人的公钥           |
 |      transfer       | `object` |         图片转存相关设置         |
 | transfer.maxRetries | `number` |   API 返回 429 时最大重试次数    |
 

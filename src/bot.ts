@@ -1,4 +1,5 @@
 import {
+  base64ToArrayBuffer,
   Bot,
   type Context,
   type Fragment,
@@ -26,6 +27,7 @@ import {
 import type { KoaContext } from "./types";
 import { Callback, Message } from "./structs";
 import { VillaMessanger } from "./messanger";
+import { webcrypto } from "crypto";
 
 export class VillaBot extends Bot<VillaBotConfig> {
   /** bot id */
@@ -83,7 +85,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     return new VillaMessanger(this, channelId, guildId, options).send(content);
   }
 
-  protected handleCallback(ctx: KoaContext) {
+  protected async handleCallback(ctx: KoaContext) {
     const { body } = ctx.request;
     if (!body) {
       ctx.body = defineStruct<Callback.Response>({
@@ -92,6 +94,41 @@ export class VillaBot extends Bot<VillaBotConfig> {
       });
       ctx.status = 400;
       return;
+    }
+    // TODO: remove this because `pubKey` will be a required config since next version
+    if (this.config.pubKey) {
+      const sign = base64ToArrayBuffer(ctx.header["x-rpc-bot_sign"] as string);
+      const data = new URLSearchParams({
+        body: ctx.request.rawBody!,
+        secret: this.config.secret,
+      }).toString();
+      const hash = await webcrypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(data)
+      );
+
+      const publicKey = await webcrypto.subtle.importKey(
+        "spki",
+        base64ToArrayBuffer(this.config.pubKey.slice(26, -24).trim()),
+        { name: "RSA-PKCS1-v1_5", hash: "SHA-256" },
+        false,
+        ["verify"]
+      );
+      if (
+        !(await webcrypto.subtle.verify(
+          "RSASSA-PKCS1-v1_5",
+          publicKey,
+          sign,
+          hash
+        ))
+      ) {
+        ctx.body = defineStruct<Callback.Response>({
+          message: "Invalid signature",
+          retcode: 403,
+        });
+        ctx.status = 403;
+        return;
+      }
     }
 
     this.avatar = body.event.robot.template.icon;
