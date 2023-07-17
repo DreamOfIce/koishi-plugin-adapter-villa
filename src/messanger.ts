@@ -187,6 +187,9 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "image": {
         const url = (element.attrs as Dict<string, "url">)["url"];
         const newUrl = await this.bot.transferImage(url);
+        const { protocol } = new URL(newUrl);
+        if (protocol !== "http:" && protocol !== "https:")
+          throw new Error(`Unsupported image protocol: ${protocol}`);
         await this.flush();
         const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
           content: {

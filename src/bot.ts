@@ -1,5 +1,4 @@
 import {
-  base64ToArrayBuffer,
   Bot,
   type Context,
   type Fragment,
@@ -10,6 +9,7 @@ import {
 } from "koishi";
 import { VillaBotConfig } from "./config";
 import {
+  calcSecretHash,
   createAxios,
   defineStruct,
   deleteMessage,
@@ -23,11 +23,11 @@ import {
   registerCallbackRoute,
   removeCallbackRoute,
   transferImage,
+  verifyCallback,
 } from "./utils";
 import type { KoaContext } from "./types";
 import { Callback, Message } from "./structs";
 import { VillaMessanger } from "./messanger";
-import { webcrypto } from "crypto";
 
 export class VillaBot extends Bot<VillaBotConfig> {
   /** bot id */
@@ -50,7 +50,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     this.secret = config.secret;
     this.selfId = config.id;
 
-    this.axios = createAxios(ctx, config.id, config.secret, this.apiServer);
+    this.axios = ctx.http;
   }
 
   public onError(error: Error) {
@@ -59,6 +59,14 @@ export class VillaBot extends Bot<VillaBotConfig> {
 
   public override async start(): Promise<void> {
     await super.start();
+    this.axios = createAxios(
+      this.ctx,
+      this.config.id,
+      this.config.pubKey
+        ? await calcSecretHash(this.config.secret, this.config.pubKey)
+        : this.config.secret,
+      this.apiServer
+    );
     registerCallbackRoute(
       this.config.path,
       this.ctx,
@@ -95,31 +103,14 @@ export class VillaBot extends Bot<VillaBotConfig> {
       ctx.status = 400;
       return;
     }
-    // TODO: remove this because `pubKey` will be a required config since next version
-    if (this.config.pubKey) {
-      const sign = base64ToArrayBuffer(ctx.header["x-rpc-bot_sign"] as string);
-      const data = new URLSearchParams({
-        body: ctx.request.rawBody!,
-        secret: this.config.secret,
-      }).toString();
-      const hash = await webcrypto.subtle.digest(
-        "SHA-256",
-        new TextEncoder().encode(data)
-      );
 
-      const publicKey = await webcrypto.subtle.importKey(
-        "spki",
-        base64ToArrayBuffer(this.config.pubKey.slice(26, -24).trim()),
-        { name: "RSA-PKCS1-v1_5", hash: "SHA-256" },
-        false,
-        ["verify"]
-      );
+    if (this.config.pubKey) {
       if (
-        !(await webcrypto.subtle.verify(
-          "RSASSA-PKCS1-v1_5",
-          publicKey,
-          sign,
-          hash
+        !(await verifyCallback(
+          ctx.header["x-rpc-bot_sign"] as string,
+          this.config.secret,
+          this.config.pubKey,
+          ctx.request.rawBody
         ))
       ) {
         ctx.body = defineStruct<Callback.Response>({

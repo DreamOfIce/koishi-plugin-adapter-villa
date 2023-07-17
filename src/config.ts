@@ -4,6 +4,7 @@ export interface VillaBotConfig extends Bot.Config {
   id: string;
   secret: string;
   path: string;
+  // TODO: mark `pubKey` as required because old API auth will be removed since Aug. 8th, 2023
   pubKey?: string;
   transfer: {
     maxRetries: number;
