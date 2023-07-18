@@ -30,7 +30,7 @@ export async function transferImage(
     }
     case "file:": {
       const image = await readFile(url);
-      const ext = extname(url);
+      const ext: string = extname(url);
       hash = Array.from(
         new Uint8Array(await webcrypto.subtle.digest("SHA-256", image))
       )
@@ -39,12 +39,13 @@ export async function transferImage(
       images[hash] = image;
       sourceUrl = `${this.ctx.root.config.selfUrl!}${
         this.config.path
-      }/${hash}.${ext}`;
+      }/${hash}${ext}`;
       break;
     }
     case "base64:": {
       const image = base64ToArrayBuffer(url.slice(9));
-      const { ext = "png" } = (await fileTypeFromBuffer(image)) ?? {};
+      let { ext }: { ext?: string } = (await fileTypeFromBuffer(image)) ?? {};
+      ext = ext ? `.${ext}` : "";
       hash = Array.from(
         new Uint8Array(await webcrypto.subtle.digest("SHA-256", image))
       )
@@ -53,7 +54,7 @@ export async function transferImage(
       images[hash] = image;
       sourceUrl = `${this.ctx.root.config.selfUrl!}${
         this.config.path
-      }/${hash}.${ext}`;
+      }/${hash}${ext}`;
       break;
     }
     default: {
