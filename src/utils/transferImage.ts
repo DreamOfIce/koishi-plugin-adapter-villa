@@ -1,7 +1,7 @@
 import { webcrypto } from "crypto";
 import { readFile } from "fs/promises";
 import { extname } from "path";
-import { fileTypeFromBuffer } from "file-type";
+import { fromBuffer } from "file-type";
 import type { ParameterizedContext } from "koa";
 import { base64ToArrayBuffer, sleep } from "koishi";
 import { defineStruct } from "./defineStruct";
@@ -44,7 +44,7 @@ export async function transferImage(
     }
     case "base64:": {
       const image = base64ToArrayBuffer(url.slice(9));
-      let { ext }: { ext?: string } = (await fileTypeFromBuffer(image)) ?? {};
+      let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
       ext = ext ? `.${ext}` : "";
       hash = Array.from(
         new Uint8Array(await webcrypto.subtle.digest("SHA-256", image))
