@@ -1,3 +1,25 @@
+## [0.4.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.3.0...v0.4.0) (2023-07-20)
+
+### ⚠ BREAKING CHANGES
+
+- mark pubKey as required config
+
+### Features
+
+- add public key import cache ([1888535](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/188853501d8634e22f10fb8a150a540e6d95d4d6))
+- mark pubKey as required config ([d24aa4a](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/d24aa4a98c6d06560e9404905c0257fe95ed16c7))
+- support callback signature verfiry ([bc4836a](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/bc4836a83d20780be2b2697eaa05376fbb7d2751))
+- support image transfer ([94a365a](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/94a365a0abec6f386f3046af7ea9e161944a0e00))
+- support new API auth method ([584026d](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/584026dce645db07b248b9698ade7ec7b4596e13))
+
+### Bug Fixes
+
+- fix a typo ([2fd17ce](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/2fd17cebd721f60c798c0f6e4e438bda4b45521b))
+- fix a typo ([66c79e9](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/66c79e94a49cd295c7b0e1a67901e87d7d07920a))
+- fix callback verify error ([9291595](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/9291595d59b9311bbe29f1728765baa3a721f383))
+- fix some errors ([30cb25a](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/30cb25a9d744e5a7a4b62f3984c7aa963fad30be))
+- use file-type@16 to support cjs ([2671cd6](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/2671cd613bb007928a411198c6010de77f10b414))
+
 ## [0.3.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.2.0...v0.3.0) (2023-07-08)
 
 ### ⚠ BREAKING CHANGES
