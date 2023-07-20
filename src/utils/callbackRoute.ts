@@ -37,7 +37,7 @@ export function registerCallbackRoute(
         ctx.status = 500;
       }
     } else {
-      logger.warn(`Receive callback of unknown bot: ${botId as string}`);
+      logger.warn(`Receive callback of unknown bot: ${botId!}`);
       ctx.body = defineStruct<Callback.Response>({
         message: "Bot not found",
         retcode: 1,

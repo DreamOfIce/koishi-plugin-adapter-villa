@@ -9,9 +9,7 @@ export const arrayBufferToHex = (buffer: ArrayBuffer) =>
 export const calcSecretHash = async (secret: string, pubKey: string) => {
   const publicKey = await webcrypto.subtle.importKey(
     "raw",
-    await new TextEncoder().encode(
-      pubKey.endsWith("\n") ? pubKey : `${pubKey}\n`
-    ),
+    new TextEncoder().encode(pubKey.endsWith("\n") ? pubKey : `${pubKey}\n`),
     {
       name: "HMAC",
       hash: "SHA-256",

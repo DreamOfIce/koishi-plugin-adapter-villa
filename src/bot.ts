@@ -113,6 +113,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           ctx.request.rawBody
         ))
       ) {
+        logger.warn("Callback signature mismatch, ignored");
         ctx.body = defineStruct<Callback.Response>({
           message: "Invalid signature",
           retcode: 403,

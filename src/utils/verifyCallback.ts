@@ -1,6 +1,5 @@
 import { webcrypto } from "crypto";
 import { base64ToArrayBuffer } from "koishi";
-import { importPublicKey } from "./importPublicKey";
 
 export const verifyCallback = async (
   signature: string,
@@ -9,23 +8,24 @@ export const verifyCallback = async (
   body?: string
 ) => {
   const sign = base64ToArrayBuffer(signature);
-  const data = new URLSearchParams({
-    body: body ?? "",
-    secret,
-  }).toString();
-  const hash = await webcrypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(data)
+  const data = new TextEncoder().encode(
+    new URLSearchParams({
+      body: body?.trim() ?? "",
+      secret,
+    }).toString()
   );
 
-  const publicKey = await importPublicKey(pubKey, {
-    name: "RSA-PKCS1-v1_5",
-    hash: "SHA-256",
-  });
+  const publicKey = await webcrypto.subtle.importKey(
+    "spki",
+    base64ToArrayBuffer(pubKey.slice(26, -24)),
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["verify"]
+  );
   return await webcrypto.subtle.verify(
     "RSASSA-PKCS1-v1_5",
     publicKey,
     sign,
-    hash
+    data
   );
 };
