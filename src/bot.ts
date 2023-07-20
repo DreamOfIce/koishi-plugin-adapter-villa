@@ -62,9 +62,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     this.axios = createAxios(
       this.ctx,
       this.config.id,
-      this.config.pubKey
-        ? await calcSecretHash(this.config.secret, this.config.pubKey)
-        : this.config.secret,
+      await calcSecretHash(this.config.secret, this.config.pubKey),
       this.apiServer
     );
     registerCallbackRoute(
@@ -104,23 +102,21 @@ export class VillaBot extends Bot<VillaBotConfig> {
       return;
     }
 
-    if (this.config.pubKey) {
-      if (
-        !(await verifyCallback(
-          ctx.header["x-rpc-bot_sign"] as string,
-          this.config.secret,
-          this.config.pubKey,
-          ctx.request.rawBody
-        ))
-      ) {
-        logger.warn("Callback signature mismatch, ignored");
-        ctx.body = defineStruct<Callback.Response>({
-          message: "Invalid signature",
-          retcode: 403,
-        });
-        ctx.status = 403;
-        return;
-      }
+    if (
+      !(await verifyCallback(
+        ctx.header["x-rpc-bot_sign"] as string,
+        this.config.secret,
+        this.config.pubKey,
+        ctx.request.rawBody
+      ))
+    ) {
+      logger.warn("Callback signature mismatch, ignored");
+      ctx.body = defineStruct<Callback.Response>({
+        message: "Invalid signature",
+        retcode: 403,
+      });
+      ctx.status = 403;
+      return;
     }
 
     this.avatar = body.event.robot.template.icon;

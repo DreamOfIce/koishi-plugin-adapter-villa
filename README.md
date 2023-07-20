@@ -27,14 +27,14 @@
 
 > `bot_id`和`bot_secret`请前往官方大别野申请ヾ(≧▽≦\*)o
 
-|        名称         |   类型   |              描述              |      必填/默认值       |
-| :-----------------: | :------: | :----------------------------: | :--------------------: |
-|         id          | `string` |    bot_id: 机器人的唯一标志    |          必填          |
-|       secret        | `string` | bot_secret: 机器人鉴权唯一标志 |          必填          |
-|       pubKey        | `string` |          机器人的公钥          | 选填(下版本开始为必填) |
-|        path         | `string` |        服务器监听的路径        |        `/villa`        |
-|      transfer       | `object` |        图片转存相关设置        |           -            |
-| transfer.maxRetries | `number` |  API 返回 429 时最大重试次数   |          `3`           |
+|        名称         |   类型   |              描述              | 必填/默认值 |
+| :-----------------: | :------: | :----------------------------: | :---------: |
+|         id          | `string` |    bot_id: 机器人的唯一标志    |    必填     |
+|       secret        | `string` | bot_secret: 机器人鉴权唯一标志 |    必填     |
+|       pubKey        | `string` |          机器人的公钥          |    必填     |
+|        path         | `string` |        服务器监听的路径        |  `/villa`   |
+|      transfer       | `object` |        图片转存相关设置        |      -      |
+| transfer.maxRetries | `number` |  API 返回 429 时最大重试次数   |     `3`     |
 
 ## License
 
