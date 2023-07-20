@@ -8,7 +8,6 @@ export * from "./getChannelList";
 export * from "./getGuild";
 export * from "./getGuildMemberList";
 export * from "./getUser";
-export * from "./importPublicKey";
 export * from "./isBot";
 export * from "./logger";
 export * from "./parseMessage";
