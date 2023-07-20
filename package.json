@@ -49,8 +49,8 @@
     "file-type": "16"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.6.6",
-    "@commitlint/config-conventional": "^17.6.6",
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
     "@koishijs/eslint-config": "^1.0.4",
     "@release-it/conventional-changelog": "^7.0.0",
     "@tsconfig/esm": "^1.0.4",
