@@ -201,14 +201,16 @@ export const parseTextMessageContent = (
   const elements = h.transform(h.parse(elementsStr), {
     text: (attrs: Dict<string, "content">) =>
       h.parse(
-        attrs.content.replace(
-          emojiRegExp,
-          (_match, name: string) =>
-            `<face id="${h.escape(name, true)}" name="${h.escape(
-              name,
-              true
-            )}" platform="villa" />`
-        )
+        h
+          .escape(attrs.content)
+          .replace(
+            emojiRegExp,
+            (_match, name: string) =>
+              `<face id="${h.escape(name, true)}" name="${h.escape(
+                name,
+                true
+              )}" platform="villa" />`
+          )
       ),
   });
 
