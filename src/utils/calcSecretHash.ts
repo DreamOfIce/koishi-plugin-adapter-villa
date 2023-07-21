@@ -6,7 +6,10 @@ export const arrayBufferToHex = (buffer: ArrayBuffer) =>
     ""
   );
 
-export const calcSecretHash = async (secret: string, pubKey: string) => {
+export const calcSecretHash = async (secret: string, _pubKey: string) => {
+  const pubKey = _pubKey.replaceAll(" ", (_match, offset) =>
+    offset < 26 || offset > _pubKey.length - 24 ? " " : "\n"
+  );
   const publicKey = await webcrypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(pubKey.endsWith("\n") ? pubKey : `${pubKey}\n`),
