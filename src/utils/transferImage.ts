@@ -13,7 +13,7 @@ const images: Record<string, ArrayBuffer> = {};
 
 export async function transferImage(
   this: VillaBot,
-  url: string
+  url: string,
 ): Promise<string> {
   const { hostname, protocol } = new URL(url);
   let hash: string | undefined, sourceUrl: string;
@@ -32,7 +32,7 @@ export async function transferImage(
       const image = await readFile(url);
       const ext: string = extname(url);
       hash = Array.from(
-        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image))
+        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
       )
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
@@ -47,7 +47,7 @@ export async function transferImage(
       let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
       ext = ext ? `.${ext}` : "";
       hash = Array.from(
-        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image))
+        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
       )
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
@@ -69,7 +69,7 @@ export async function transferImage(
       ctx: ParameterizedContext<
         Record<never, never>,
         { params: { hash: string } }
-      >
+      >,
     ) => {
       const { hash } = ctx.params;
       if (hash in images) {
@@ -78,7 +78,7 @@ export async function transferImage(
       } else {
         ctx.status = 404;
       }
-    }
+    },
   );
 
   try {
@@ -92,14 +92,14 @@ export async function transferImage(
             }),
             validateStatus: (status) =>
               (status >= 200 && status < 300) || status === 429,
-          }
+          },
         );
       if (status === 429) {
         if (this.config.transfer.maxRetries !== i) {
           logger.warn(
             `Image transfer API returned 429, try again after 5s(${
               this.config.transfer.maxRetries - i
-            } retries left)`
+            } retries left)`,
           );
           await sleep(5000);
           continue;

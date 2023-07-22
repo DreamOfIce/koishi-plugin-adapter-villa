@@ -3,7 +3,7 @@ import type { Context, Request } from "koa";
 
 export type KoaMiddleware = (
   ctx: KoaContext,
-  next: () => Promise<void>
+  next: () => Promise<void>,
 ) => Promise<void> | void;
 
 interface CalllbackRequest extends Request {

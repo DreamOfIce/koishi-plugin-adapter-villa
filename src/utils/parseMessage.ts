@@ -15,7 +15,7 @@ const inlineAttrEntityTypes: Message.TextEntity["entity"]["type"][] = [
 
 const preProcessingEntities = (entities: Message.TextEntity[]) => {
   const inlineAttrEntities = entities.filter((e) =>
-    inlineAttrEntityTypes.includes(e.entity.type)
+    inlineAttrEntityTypes.includes(e.entity.type),
   );
   return entities
     .sort((e1, e2) => e1.offset - e2.offset || e1.length - e2.length)
@@ -43,7 +43,7 @@ const preProcessingEntities = (entities: Message.TextEntity[]) => {
             });
             return acc;
           },
-          [e]
+          [e],
         );
       }
     });
@@ -75,30 +75,30 @@ const addEndTag = ({
 
 export const parseMessage = (
   type: Message.MessageNumberType,
-  msg: Message.MsgContentInfo
+  msg: Message.MsgContentInfo,
 ): Element[] => {
   const elements: Element[] = [];
   if (msg.quote)
     elements.push(
       h("quote", {
         id: `${msg.quote.quoted_message_id}~${msg.quote.quoted_message_send_time}`,
-      })
+      }),
     );
 
   switch (type) {
     case Message.MessageNumberType.text:
       elements.push(
-        ...parseTextMessageContent(msg.content as Message.TextMsgContent)
+        ...parseTextMessageContent(msg.content as Message.TextMsgContent),
       );
       break;
     case Message.MessageNumberType.image:
       elements.push(
-        ...parseImageMessageContent(msg.content as Message.ImageMsgContent)
+        ...parseImageMessageContent(msg.content as Message.ImageMsgContent),
       );
       break;
     case Message.MessageNumberType.post:
       elements.push(
-        ...parsePostMessageContent(msg.content as Message.PostMsgContent)
+        ...parsePostMessageContent(msg.content as Message.PostMsgContent),
       );
       break;
   }
@@ -112,7 +112,7 @@ export const parseMessage = (
  * @returns Koishi elements array
  */
 export const parseTextMessageContent = (
-  content: Message.TextMsgContent
+  content: Message.TextMsgContent,
 ): Element[] => {
   let elementsStr = "";
   let i = 0;
@@ -140,10 +140,10 @@ export const parseTextMessageContent = (
             .trim();
           elementsStr += `<at id="${h.escape(
             entity.entity.bot_id,
-            true
+            true,
           )}" name="${h.escape(
             name.startsWith("@") ? name.slice(1) : name,
-            true
+            true,
           )}" />`;
           i += entity.length;
           break;
@@ -154,10 +154,10 @@ export const parseTextMessageContent = (
             .trim();
           elementsStr += `<at id="${h.escape(
             entity.entity.user_id,
-            true
+            true,
           )}" name="${h.escape(
             name.startsWith("@") ? name.slice(1) : name,
-            true
+            true,
           )}" />`;
           i += entity.length;
           break;
@@ -168,7 +168,7 @@ export const parseTextMessageContent = (
             .trim();
           elementsStr += `<at type="all" name="${h.escape(
             name.startsWith("@") ? name.slice(1) : name,
-            true
+            true,
           )}" />`;
           i += entity.length;
           break;
@@ -176,10 +176,10 @@ export const parseTextMessageContent = (
         case "villa_room_link": {
           elementsStr += `<sharp id="${h.escape(
             `${entity.entity.villa_id}~${entity.entity.room_id}`,
-            true
+            true,
           )}" name="${h.escape(
             text.slice(entity.offset, entity.length),
-            true
+            true,
           )}" />`;
           i += entity.length;
           break;
@@ -208,9 +208,9 @@ export const parseTextMessageContent = (
             (_match, name: string) =>
               `<face id="${h.escape(name, true)}" name="${h.escape(
                 name,
-                true
-              )}" platform="villa" />`
-          )
+                true,
+              )}" platform="villa" />`,
+          ),
       ),
   });
 
@@ -223,7 +223,7 @@ export const parseTextMessageContent = (
  * @returns Koishi elements array
  */
 export const parseImageMessageContent = (
-  content: Message.ImageMsgContent
+  content: Message.ImageMsgContent,
 ): Element[] => [h("image", { url: content.url })];
 
 /**
@@ -232,5 +232,5 @@ export const parseImageMessageContent = (
  * @returns Koishi elements array
  */
 export const parsePostMessageContent = (
-  content: Message.PostMsgContent
+  content: Message.PostMsgContent,
 ): Element[] => [h("a", { href: `${postPrefix}${content.post_id}` })];

@@ -10,7 +10,7 @@ export function registerCallbackRoute(
   path: string,
   context: Context,
   id: string,
-  callback: KoaMiddleware
+  callback: KoaMiddleware,
 ) {
   logger.info(`Add callback for bot ${id}`);
   callbacks[id] = callback;

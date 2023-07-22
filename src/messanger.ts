@@ -17,7 +17,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
     bot: VillaBot,
     channelId: string,
     guildId?: string,
-    options?: SendOptions
+    options?: SendOptions,
   ) {
     if (!guildId) throw new Error("Villa doesn't support private message now");
     super(bot, channelId, guildId, options);
@@ -27,7 +27,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
 
   public override async flush(
     msg: Message.MsgContentInfo = this.msg,
-    type: Message.MessageType = Message.MessageType.text
+    type: Message.MessageType = Message.MessageType.text,
   ): Promise<void> {
     try {
       if (
@@ -37,7 +37,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
         logger.debug(
           `Send message ${JSON.stringify(this.msg, undefined, 2)} to villa ${
             this.villaId
-          } room ${this.roomId}`
+          } room ${this.roomId}`,
         );
         const res = await this.bot.axios.post<API.SendMessage.Response>(
           "/vila/api/bot/platform/sendMessage",
@@ -50,11 +50,11 @@ export class VillaMessanger extends Messenger<VillaBot> {
             headers: {
               "x-rpc-bot_villa_id": this.villaId,
             },
-          }
+          },
         );
         if (res.retcode !== 0) {
           throw new Error(
-            `Failed to send message '${this.msg.content.text}': ${res.message}(${res.retcode})`
+            `Failed to send message '${this.msg.content.text}': ${res.message}(${res.retcode})`,
           );
         }
 
@@ -130,7 +130,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
           };
         } else {
           logger.warn(
-            `@user with role or type='here' is not currently support`
+            `@user with role or type='here' is not currently support`,
           );
         }
 
@@ -169,7 +169,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
         await this.render(element.children);
         if (this.msg !== currentMsg) {
           logger.warn(
-            `Message is flushed when rendering the child elements of <a>`
+            `Message is flushed when rendering the child elements of <a>`,
           );
           break;
         }
@@ -204,7 +204,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
       case "file": {
         const url = (element.attrs as Dict<string, "url">)["url"];
         logger.warn(
-          `Media Element <${element.type}> is not currently support by villa bot`
+          `Media Element <${element.type}> is not currently support by villa bot`,
         );
         this.msg.content.text += `![${element.type}-${element.type}](${
           /^(https?:\/\/)/i.test(url) ? url : `raw`

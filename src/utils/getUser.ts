@@ -8,7 +8,7 @@ import { isBot } from "./isBot";
 export async function getUser(
   this: VillaBot,
   userId: string,
-  guildId?: string
+  guildId?: string,
 ): Promise<Universal.User> {
   if (isBot(userId)) {
     if (userId === this.id) {
@@ -21,7 +21,7 @@ export async function getUser(
       };
     }
     logger.warn(
-      `Get profile of bot user is not currently support(receive id '${userId}')`
+      `Get profile of bot user is not currently support(receive id '${userId}')`,
     );
     return {
       userId,
@@ -35,12 +35,12 @@ export async function getUser(
       headers: {
         "x-rpc-villa_id": guildId,
       },
-    }
+    },
   );
 
   if (res.retcode !== 0) {
     logger.warn(
-      `Failed to get profile of user ${userId}: ${res.message}(${res.retcode})`
+      `Failed to get profile of user ${userId}: ${res.message}(${res.retcode})`,
     );
   }
 

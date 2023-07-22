@@ -63,13 +63,13 @@ export class VillaBot extends Bot<VillaBotConfig> {
       this.ctx,
       this.config.id,
       await calcSecretHash(this.config.secret, this.config.pubKey),
-      this.apiServer
+      this.apiServer,
     );
     registerCallbackRoute(
       this.config.path,
       this.ctx,
       this.id,
-      this.handleCallback.bind(this)
+      this.handleCallback.bind(this),
     );
   }
 
@@ -86,7 +86,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     channelId: string,
     content: Fragment,
     guildId?: string | undefined,
-    options?: SendOptions | undefined
+    options?: SendOptions | undefined,
   ): Promise<string[]> {
     return new VillaMessanger(this, channelId, guildId, options).send(content);
   }
@@ -107,7 +107,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
         ctx.header["x-rpc-bot_sign"] as string,
         this.config.secret,
         this.config.pubKey,
-        ctx.request.rawBody
+        ctx.request.rawBody,
       ))
     ) {
       logger.warn("Callback signature mismatch, ignored");
@@ -134,14 +134,14 @@ export class VillaBot extends Bot<VillaBotConfig> {
           userId: eventData.JoinVilla.join_uid.toString(),
         });
         logger.info(
-          `New member of villa ${body.event.robot.villa_id}: ${eventData.JoinVilla.join_uid}`
+          `New member of villa ${body.event.robot.villa_id}: ${eventData.JoinVilla.join_uid}`,
         );
         this.dispatch(session);
         break;
       }
       case Callback.RobotEventType.SendMessage: {
         const msg = JSON.parse(
-          eventData.SendMessage.content
+          eventData.SendMessage.content,
         ) as Callback.MsgContentInfo;
         const content =
           eventData.SendMessage.object_name === Message.MessageNumberType.text
@@ -165,7 +165,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           userId: eventData.SendMessage.from_user_id.toString(),
         });
         logger.info(
-          `Receive message '${content}'(${eventData.SendMessage.msg_uid})`
+          `Receive message '${content}'(${eventData.SendMessage.msg_uid})`,
         );
         this.dispatch(session);
         break;
@@ -178,7 +178,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           timestamp: new Date().getTime(),
         });
         logger.info(
-          `Bot ${this.id} has been added to villa ${eventData.CreateRobot.villa_id}`
+          `Bot ${this.id} has been added to villa ${eventData.CreateRobot.villa_id}`,
         );
         this.dispatch(session);
         break;
@@ -191,7 +191,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           timestamp: new Date().getTime(),
         });
         logger.info(
-          `Bot ${this.id} has been removed from villa ${eventData.DeleteRobot.villa_id}`
+          `Bot ${this.id} has been removed from villa ${eventData.DeleteRobot.villa_id}`,
         );
         this.dispatch(session);
         break;
@@ -227,7 +227,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
           userId: eventData.AddQuickEmoticon.uid.toString(),
         });
         logger.info(
-          `Receive reaction '${eventData.AddQuickEmoticon.emoticon}' on message ${eventData.AddQuickEmoticon.msg_uid}`
+          `Receive reaction '${eventData.AddQuickEmoticon.emoticon}' on message ${eventData.AddQuickEmoticon.msg_uid}`,
         );
         this.dispatch(session);
         break;
@@ -246,7 +246,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
 
   public override getGuildMember(
     guildId: string,
-    userId: string
+    userId: string,
   ): Promise<Universal.GuildMember> {
     return this.getUser(userId, guildId);
   }

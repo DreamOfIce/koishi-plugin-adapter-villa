@@ -83,7 +83,7 @@ export namespace Callback {
   }
 
   export interface MsgContentInfo<
-    T extends Message.MsgContent = Message.MsgContent
+    T extends Message.MsgContent = Message.MsgContent,
   > extends Message.MsgContentInfo<T> {
     user: {
       /** avatar url */

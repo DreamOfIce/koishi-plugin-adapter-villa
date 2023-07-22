@@ -5,7 +5,7 @@ import { logger } from "./logger";
 
 export async function getGuild(
   this: VillaBot,
-  guildId: string
+  guildId: string,
 ): Promise<Universal.Guild> {
   const res = await this.axios.get<API.GetVilla.Response>(
     "/vila/api/bot/platform/getVilla",
@@ -13,12 +13,12 @@ export async function getGuild(
       headers: {
         "x-rpc-villa_id": guildId,
       },
-    }
+    },
   );
 
   if (res.retcode !== 0) {
     logger.warn(
-      `Failed to get data of villa ${guildId}: ${res.message}(${res.retcode})`
+      `Failed to get data of villa ${guildId}: ${res.message}(${res.retcode})`,
     );
   }
 

@@ -6,7 +6,7 @@ import { logger } from "./logger";
 export async function deleteMessage(
   this: VillaBot,
   channelId: string,
-  messageId: string
+  messageId: string,
 ): Promise<void> {
   const [villaId, roomId] = channelId.split("~") as [string, string];
   const [id, timestamp] = messageId.split("~") as [string, string];
@@ -27,12 +27,12 @@ export async function deleteMessage(
       headers: {
         "x-rpc-villa_id": villaId,
       },
-    }
+    },
   );
 
   if (res.retcode !== 0) {
     logger.warn(
-      `Failed to recall message ${id}: ${res.message}(${res.retcode})`
+      `Failed to recall message ${id}: ${res.message}(${res.retcode})`,
     );
   }
 }

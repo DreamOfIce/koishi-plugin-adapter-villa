@@ -6,7 +6,7 @@ import { defineStruct } from "./defineStruct";
 
 export async function getChannel(
   this: VillaBot,
-  channelId: string
+  channelId: string,
 ): Promise<Universal.Channel> {
   const [villaId, roomId] = channelId.split("~") as [string, string];
 
@@ -19,12 +19,12 @@ export async function getChannel(
       headers: {
         "x-rpc-villa_id": villaId,
       },
-    }
+    },
   );
 
   if (res.retcode !== 0) {
     logger.warn(
-      `Failed to get data of room ${roomId} in ${villaId}: ${res.message}(${res.retcode})`
+      `Failed to get data of room ${roomId} in ${villaId}: ${res.message}(${res.retcode})`,
     );
   }
 

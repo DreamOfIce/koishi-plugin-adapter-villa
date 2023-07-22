@@ -8,7 +8,7 @@ const pageSize = "100";
 
 export async function getGuildMemberList(
   this: VillaBot,
-  guildId: string
+  guildId: string,
 ): Promise<Universal.GuildMember[]> {
   const members: Universal.GuildMember[] = [];
   let offset = 0,
@@ -25,12 +25,12 @@ export async function getGuildMemberList(
           offset_str: offset.toString(),
           size: pageSize,
         }),
-      }
+      },
     );
 
     if (res.retcode !== 0) {
       logger.warn(
-        `Failed to get members of villa ${guildId}: ${res.message}(${res.retcode})`
+        `Failed to get members of villa ${guildId}: ${res.message}(${res.retcode})`,
       );
     }
 
@@ -46,7 +46,7 @@ export async function getGuildMemberList(
           nickname: member.basic.nickname,
           avatar: member.basic.avatar_url,
           isBot: false,
-        })
+        }),
       );
     }
   }

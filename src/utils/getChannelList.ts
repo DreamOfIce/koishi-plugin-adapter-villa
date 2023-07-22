@@ -5,7 +5,7 @@ import { logger } from "./logger";
 
 export async function getChannelList(
   this: VillaBot,
-  guildId: string
+  guildId: string,
 ): Promise<Universal.Channel[]> {
   const res = await this.axios.get<API.GetRoomList.Response>(
     "/vila/api/bot/platform/getVillaGroupRoomList",
@@ -13,12 +13,12 @@ export async function getChannelList(
       headers: {
         "x-rpc-villa_id": guildId,
       },
-    }
+    },
   );
 
   if (res.retcode !== 0) {
     logger.warn(
-      `Failed to get room list of ${guildId}: ${res.message}(${res.retcode})`
+      `Failed to get room list of ${guildId}: ${res.message}(${res.retcode})`,
     );
   }
 
@@ -29,8 +29,8 @@ export async function getChannelList(
       channels.push({
         channelId: `${guildId}~${room.room_id}`,
         channelName: room.room_name,
-      })
-    )
+      }),
+    ),
   );
   return channels;
 }

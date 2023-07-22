@@ -4,7 +4,7 @@ export const createAxios = (
   ctx: Context,
   id: string,
   secret: string,
-  apiServer: string
+  apiServer: string,
 ) =>
   ctx.http.extend({
     endpoint: apiServer,
