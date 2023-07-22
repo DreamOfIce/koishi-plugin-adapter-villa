@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.4.0...v0.4.1) (2023-07-22)
+
+### Bug Fixes
+
+- fix image parse error ([7d1f006](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/7d1f006c62f7d32314c2d961dd1d931720c0cc38))
+- **messanger:** allow non-standard public key ([f22e9d1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/f22e9d18eb3b65b105166cbff50be0d59e118c73))
+
 ## [0.4.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.3.0...v0.4.0) (2023-07-20)
 
 ### ⚠ BREAKING CHANGES

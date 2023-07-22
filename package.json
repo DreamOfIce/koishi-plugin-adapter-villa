@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-adapter-villa",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "villa adapter for Koishi",
   "keywords": [
     "adapter",
