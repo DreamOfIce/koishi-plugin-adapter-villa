@@ -1,3 +1,14 @@
+## [0.5.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.4.1...v0.5.0) (2023-07-24)
+
+### Features
+
+- add config `verifyCallback` ([b678175](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/b6781752889ea84bd06c98f5a362da99539ee77b))
+
+### Bug Fixes
+
+- fix image transfer ([c840800](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/c840800485d7c6df073dd1f16d03d8ceffabeea7))
+- fix some typos ([d526092](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/d526092971168cce03e7cd6fbb6b1db12ca1c712))
+
 ## [0.4.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.4.0...v0.4.1) (2023-07-22)
 
 ### Bug Fixes
