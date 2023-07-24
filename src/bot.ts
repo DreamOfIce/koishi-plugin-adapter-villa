@@ -103,15 +103,13 @@ export class VillaBot extends Bot<VillaBotConfig> {
     }
 
     if (
-      !(
-        this.config.verifyCallback ||
-        (await verifyCallback(
-          ctx.header["x-rpc-bot_sign"] as string,
-          this.config.secret,
-          this.config.pubKey,
-          ctx.request.rawBody,
-        ))
-      )
+      this.config.verifyCallback &&
+      !(await verifyCallback(
+        ctx.header["x-rpc-bot_sign"] as string,
+        this.config.secret,
+        this.config.pubKey,
+        ctx.request.rawBody,
+      ))
     ) {
       logger.warn("Callback signature mismatch, ignored");
       ctx.body = defineStruct<Callback.Response>({
