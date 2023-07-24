@@ -14,6 +14,7 @@ const images: Record<string, ArrayBuffer> = {};
 export async function transferImage(
   this: VillaBot,
   url: string,
+  villaId: string,
 ): Promise<string> {
   const { hostname, protocol } = new URL(url);
   let hash: string | undefined, sourceUrl: string;
@@ -87,9 +88,13 @@ export async function transferImage(
         await this.axios.axios<API.TransferImage.Response>(
           "/vila/api/bot/platform/transferImage",
           {
+            method: "POST",
             data: defineStruct<API.TransferImage.Request>({
               url: sourceUrl,
             }),
+            headers: {
+              "x-rpc-bot_villa_id": villaId,
+            },
             validateStatus: (status) =>
               (status >= 200 && status < 300) || status === 429,
           },
