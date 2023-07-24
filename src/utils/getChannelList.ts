@@ -11,7 +11,7 @@ export async function getChannelList(
     "/vila/api/bot/platform/getVillaGroupRoomList",
     {
       headers: {
-        "x-rpc-villa_id": guildId,
+        "x-rpc-bot_villa_id": guildId,
       },
     },
   );

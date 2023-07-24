@@ -33,7 +33,7 @@ export async function getUser(
     {
       params: defineStruct<API.GetMember.Params>({ uid: userId }),
       headers: {
-        "x-rpc-villa_id": guildId,
+        "x-rpc-bot_villa_id": guildId,
       },
     },
   );

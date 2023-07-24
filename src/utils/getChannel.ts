@@ -17,7 +17,7 @@ export async function getChannel(
         room_id: roomId,
       }),
       headers: {
-        "x-rpc-villa_id": villaId,
+        "x-rpc-bot_villa_id": villaId,
       },
     },
   );

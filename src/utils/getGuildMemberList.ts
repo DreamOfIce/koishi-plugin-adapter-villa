@@ -19,7 +19,7 @@ export async function getGuildMemberList(
       "/vila/api/bot/platform/getVilla",
       {
         headers: {
-          "x-rpc-villa_id": guildId,
+          "x-rpc-bot_villa_id": guildId,
         },
         params: defineStruct<API.GetVillaMembers.Params>({
           offset_str: offset.toString(),

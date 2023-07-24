@@ -25,7 +25,7 @@ export async function deleteMessage(
     }),
     {
       headers: {
-        "x-rpc-villa_id": villaId,
+        "x-rpc-bot_villa_id": villaId,
       },
     },
   );
