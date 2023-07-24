@@ -8,6 +8,7 @@ export interface VillaBotConfig extends Bot.Config {
   transfer: {
     maxRetries: number;
   };
+  verifyCallback: boolean;
 }
 export const VillaBotConfig: Schema<VillaBotConfig> = Schema.object({
   id: Schema.string().description("bot_id: 机器人的唯一标志").required(),
@@ -23,4 +24,7 @@ export const VillaBotConfig: Schema<VillaBotConfig> = Schema.object({
   transfer: Schema.object({
     maxRetries: Schema.number().description("最大重试次数").default(3),
   })!,
+  verifyCallback: Schema.boolean()
+    .description("是否验证回调签名(生产环境强烈建议开启)")
+    .default(true),
 });
