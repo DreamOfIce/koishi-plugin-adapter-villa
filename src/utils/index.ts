@@ -3,6 +3,7 @@ export * from "./callbackRoute";
 export * from "./createAxios";
 export * from "./defineStruct";
 export * from "./deleteMessage";
+export * from "./emoticons";
 export * from "./getChannel";
 export * from "./getChannelList";
 export * from "./getGuild";

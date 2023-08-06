@@ -1,5 +1,5 @@
 import { type Dict, type Element, h } from "koishi";
-import { Message } from "../structs";
+import { type Emoticon, Message } from "../structs";
 
 const postPrefix = "https://www.miyoushe.com/dby/article/";
 
@@ -76,6 +76,10 @@ const addEndTag = ({
 export const parseMessage = (
   type: Message.MessageNumberType,
   msg: Message.MsgContentInfo,
+  {
+    emoticonList,
+    strictEmoticon,
+  }: { emoticonList: Emoticon.Emoticon[]; strictEmoticon: boolean },
 ): Element[] => {
   const elements: Element[] = [];
   if (msg.quote)
@@ -88,7 +92,11 @@ export const parseMessage = (
   switch (type) {
     case Message.MessageNumberType.text:
       elements.push(
-        ...parseTextMessageContent(msg.content as Message.TextMsgContent),
+        ...parseTextMessageContent(
+          msg.content as Message.TextMsgContent,
+          strictEmoticon,
+          emoticonList,
+        ),
       );
       break;
     case Message.MessageNumberType.image:
@@ -109,10 +117,14 @@ export const parseMessage = (
 /**
  * Parse message of type "MHY:Text"
  * @param content message content
+ * @param strictEmoticon match emoticon strictly
+ * @param emoticonList emoticon list
  * @returns Koishi elements array
  */
 export const parseTextMessageContent = (
   content: Message.TextMsgContent,
+  strictEmoticon: boolean,
+  emoticonList: Emoticon.Emoticon[],
 ): Element[] => {
   let elementsStr = "";
   let i = 0;
@@ -197,20 +209,30 @@ export const parseTextMessageContent = (
     elementsStr += h.escape(text[i]!);
   }
 
-  // replace emojis
+  // replace emoticons
   const elements = h.transform(h.parse(elementsStr), {
     text: (attrs: Dict<string, "content">) =>
       h.parse(
-        h
-          .escape(attrs.content)
-          .replace(
-            emojiRegExp,
-            (_match, name: string) =>
-              `<face id="${h.escape(name, true)}" name="${h.escape(
-                name,
-                true,
-              )}" platform="villa" />`,
-          ),
+        h.escape(attrs.content).replace(emojiRegExp, (_match, name: string) => {
+          const emoticon = emoticonList.find((e) => e.describe_text === name);
+          if (!strictEmoticon)
+            return `<face id="${h.escape(name, true)}" name="${h.escape(
+              name,
+              true,
+            )}" platform="villa" />`;
+          else if (emoticon)
+            return `<face id="${h.escape(
+              emoticon.emoticon_id.toString(),
+              true,
+            )}" name="${h.escape(
+              name,
+              true,
+            )}" platform="villa"><image url="${h.escape(
+              emoticon.icon,
+              true,
+            )}" /></>`;
+          else return name;
+        }),
       ),
   });
 

@@ -1,3 +1,4 @@
+export * from "./getAllEmoticons";
 export * from "./getMember";
 export * from "./getRoom";
 export * from "./getRoomList";

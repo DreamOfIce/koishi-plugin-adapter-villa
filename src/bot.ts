@@ -13,8 +13,10 @@ import {
   createAxios,
   defineStruct,
   deleteMessage,
+  getAllEmoticons,
   getChannel,
   getChannelList,
+  getEmoticonList,
   getGuild,
   getGuildMemberList,
   getUser,
@@ -26,7 +28,7 @@ import {
   verifyCallback,
 } from "./utils";
 import type { KoaContext } from "./types";
-import { Callback, Message } from "./structs";
+import { Callback, type Emoticon, Message } from "./structs";
 import { VillaMessanger } from "./messanger";
 
 export class VillaBot extends Bot<VillaBotConfig> {
@@ -37,11 +39,18 @@ export class VillaBot extends Bot<VillaBotConfig> {
   /** bot description  */
   protected description = "";
 
-  /** Currently ustomisation is not supported */
+  /** Currently customisation is not supported */
   protected apiServer = "https://bbs-api.miyoushe.com";
 
+  /** emoticons */
+  protected emoticon: {
+    list: Emoticon.Emoticon[];
+    task?: NodeJS.Timer;
+    expries?: number;
+  } = { list: [] };
+
   /** axios instance with auth header */
-  public axios: Quester;
+  protected axios: Quester;
 
   public constructor(ctx: Context, config: VillaBotConfig) {
     super(ctx, config);
@@ -65,6 +74,13 @@ export class VillaBot extends Bot<VillaBotConfig> {
       await calcSecretHash(this.secret, this.config.pubKey),
       this.apiServer,
     );
+    if (this.config.emoticon.strict && !this.config.emoticon.lazy) {
+      this.emoticon.list = await getAllEmoticons(this.ctx);
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      this.emoticon.task = setInterval(async () => {
+        this.emoticon.list = await getAllEmoticons(this.ctx);
+      }, this.config.emoticon.expires);
+    }
     registerCallbackRoute(
       this.config.path,
       this.ctx,
@@ -75,6 +91,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
 
   public override async stop(): Promise<void> {
     await super.stop();
+    this.emoticon.list = [];
+    if (this.emoticon.task) {
+      clearInterval(this.emoticon.task);
+    }
     removeCallbackRoute(this.id);
   }
 
@@ -141,9 +161,9 @@ export class VillaBot extends Bot<VillaBotConfig> {
         break;
       }
       case Callback.RobotEventType.SendMessage: {
-        const msg = JSON.parse(
-          eventData.SendMessage.content,
-        ) as Callback.MsgContentInfo;
+        const msg = <Callback.MsgContentInfo>(
+          JSON.parse(eventData.SendMessage.content)
+        );
         const content =
           eventData.SendMessage.object_name === Message.MessageNumberType.text
             ? (msg.content as Message.TextMsgContent).text
@@ -159,7 +179,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
           subtype: "group",
           channelId: `${body.event.robot.villa_id}~${eventData.SendMessage.room_id}`,
           content,
-          elements: parseMessage(eventData.SendMessage.object_name, msg),
+          elements: parseMessage(eventData.SendMessage.object_name, msg, {
+            emoticonList: await this.getEmoticonList(),
+            strictEmoticon: this.config.emoticon.strict,
+          }),
           guildId: body.event.robot.villa_id.toString(),
           messageId: `${eventData.SendMessage.msg_uid}~${eventData.SendMessage.send_at}`,
           timestamp: eventData.SendMessage.send_at,
@@ -252,6 +275,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     return this.getUser(userId, guildId);
   }
 
+  protected getEmoticonList = getEmoticonList;
   public transferImage = transferImage;
 
   public override deleteMessage = deleteMessage;
