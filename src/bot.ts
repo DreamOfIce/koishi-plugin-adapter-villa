@@ -49,7 +49,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
   } = { list: [] };
 
   /** axios instance with auth header */
-  protected axios: Quester;
+  public axios: Quester;
 
   public constructor(ctx: Context, config: VillaBotConfig) {
     super(ctx, config);
