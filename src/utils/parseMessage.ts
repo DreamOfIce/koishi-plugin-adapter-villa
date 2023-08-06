@@ -230,7 +230,7 @@ export const parseTextMessageContent = (
               emoticon.icon,
               true,
             )}" /></face>`;
-          else return name;
+          else return `[${name}]`;
         }),
       ),
   });
