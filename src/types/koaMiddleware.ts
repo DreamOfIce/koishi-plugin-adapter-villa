@@ -8,6 +8,7 @@ export type KoaMiddleware = (
 
 interface CalllbackRequest extends Request {
   body?: Callback.Request;
+  rawBody?: string;
 }
 export interface KoaContext extends Context {
   request: CalllbackRequest;
