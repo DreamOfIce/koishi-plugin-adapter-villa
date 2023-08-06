@@ -23,10 +23,12 @@ export const VillaBotConfig: Schema<VillaBotConfig> = Schema.object({
     .required(),
   emoticon: Schema.intersect([
     Schema.object({
-      strict: Schema.boolean().default(true),
+      strict: Schema.boolean()
+        .default(true)
+        .description("是否启用表情强匹配, 关闭则匹配所有`[foo]`格式的字符串"),
       lazy: Schema.boolean().default(true).hidden(),
       expires: Schema.number().default(3600).hidden(),
-    }).description("是否启用表情强匹配, 关闭则匹配所有`[foo]`格式的字符串"),
+    }),
     Schema.union([
       Schema.object({
         strict: Schema.const(true),
