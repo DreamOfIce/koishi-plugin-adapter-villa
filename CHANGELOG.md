@@ -1,3 +1,14 @@
+## [0.6.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.5.1...v0.6.0) (2023-08-06)
+
+### Features
+
+- support strict emoticon mode ([a19000e](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/a19000ee0b4ad4e3471fa40dc0da740d9d7d4523))
+
+### Bug Fixes
+
+- fix a type error ([4a286f7](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/4a286f7ec9e5b9032e71caf08528f85f47e249a6))
+- fix a typo ([d8607c2](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/d8607c2d70269d7dc2f97366b29c38458ae97af8))
+
 ## [0.5.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.5.0...v0.5.1) (2023-07-24)
 
 ### Bug Fixes
