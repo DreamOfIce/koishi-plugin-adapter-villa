@@ -43,6 +43,21 @@ export async function transferImage(
       }/${hash}${ext}`;
       break;
     }
+    case "data:": {
+      const [contentType, data] = url.slice(5).split(",");
+      if (!contentType?.startsWith("image/")) {
+        logger.warn(`Unsupported image type: ${contentType}.`);
+        return url;
+      }
+      if (!data) {
+        logger.warn(`Empty image data.`);
+        return url;
+      }
+      const base64 = data.startsWith("base64,")
+        ? data.slice(7)
+        : Buffer.from(data).toString("base64");
+      return transferImage.call(this, `base64:${base64}`, villaId);
+    }
     case "base64:": {
       const image = base64ToArrayBuffer(url.slice(9));
       let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
