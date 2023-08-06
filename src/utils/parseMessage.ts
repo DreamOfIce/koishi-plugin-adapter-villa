@@ -3,8 +3,7 @@ import { type Emoticon, Message } from "../structs";
 
 const postPrefix = "https://www.miyoushe.com/dby/article/";
 
-const emojiRegExp =
-  /\[([\p{Unified_Ideograph}A-z0-9][\p{Unified_Ideograph}\w ]+[\p{Unified_Ideograph}A-z0-9])\]/gu;
+const emojiRegExp = /\[([^\]]+)\]/g;
 
 const inlineAttrEntityTypes: Message.TextEntity["entity"]["type"][] = [
   "mentioned_robot",
@@ -230,7 +229,7 @@ export const parseTextMessageContent = (
             )}" platform="villa"><image url="${h.escape(
               emoticon.icon,
               true,
-            )}" /></>`;
+            )}" /></face>`;
           else return name;
         }),
       ),
@@ -246,7 +245,7 @@ export const parseTextMessageContent = (
  */
 export const parseImageMessageContent = (
   content: Message.ImageMsgContent,
-): Element[] => [h("image", { url: content.url })];
+): Element[] => [h.image(content.url)];
 
 /**
  * Parse message of type "MHY:Post"
