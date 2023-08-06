@@ -74,10 +74,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
       this.apiServer,
     );
     if (this.config.emoticon.strict && !this.config.emoticon.lazy) {
-      this.emoticon.list = await getAllEmoticons(this.ctx);
+      this.emoticon.list = await getAllEmoticons(this.ctx, this.apiServer);
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       this.emoticon.task = setInterval(async () => {
-        this.emoticon.list = await getAllEmoticons(this.ctx);
+        this.emoticon.list = await getAllEmoticons(this.ctx, this.apiServer);
       }, this.config.emoticon.expires);
     }
     registerCallbackRoute(

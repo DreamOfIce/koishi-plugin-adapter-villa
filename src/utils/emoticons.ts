@@ -5,9 +5,11 @@ import type { VillaBot } from "../bot";
 
 export const getAllEmoticons = async (
   ctx: Context,
+  apiServer: string,
 ): Promise<Emoticon.Emoticon[]> => {
-  const res = await ctx.http.post<API.getAllEmoticons.Response>(
+  const res = await ctx.http.get<API.getAllEmoticons.Response>(
     "/vila/api/bot/platform/getAllEmoticons",
+    { baseURL: apiServer },
   );
 
   if (res.retcode !== 0) {
@@ -28,7 +30,10 @@ export async function getEmoticonList(
   ) {
     this.emoticon.expries =
       new Date().getTime() + this.config.emoticon.expires * 1000;
-    return (this.emoticon.list = await getAllEmoticons(this.ctx));
+    return (this.emoticon.list = await getAllEmoticons(
+      this.ctx,
+      this.apiServer,
+    ));
   } else {
     return this.emoticon.list;
   }
