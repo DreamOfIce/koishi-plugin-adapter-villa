@@ -32,16 +32,23 @@ export async function transferImage(
     case "file:": {
       const image = await readFile(url);
       const ext: string = extname(url);
-      hash = Array.from(
-        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
-      )
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-      images[hash] = image;
-      sourceUrl = `${this.ctx.root.config.selfUrl!}${
-        this.config.path
-      }/${hash}${ext}`;
-      break;
+      return transferImage.call(
+        this,
+        `data:image/${ext.slice(1)};base64,${image.toString("base64")}`,
+        villaId,
+      );
+    }
+    // legacy support for `base64://`
+    case "base64:": {
+      const base64 = hostname.replace(/^\/\//, "");
+      const image = base64ToArrayBuffer(base64);
+      let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
+      ext = ext ? `.${ext}` : "";
+      return transferImage.call(
+        this,
+        `data:image/${ext};base64,${url.slice(9)}`,
+        villaId,
+      );
     }
     case "data:": {
       const [contentType, data] = url.slice(5).split(";");
@@ -49,19 +56,13 @@ export async function transferImage(
         logger.warn(`Unsupported image type: ${contentType}.`);
         return url;
       }
-      if (!data) {
-        logger.warn(`Empty image data.`);
+      if (!data?.startsWith("base64,")) {
+        logger.warn("Unsupported image data format.");
         return url;
       }
-      const base64 = data.startsWith("base64,")
-        ? data.slice(7)
-        : Buffer.from(data).toString("base64");
-      return transferImage.call(this, `base64:${base64}`, villaId);
-    }
-    case "base64:": {
-      const image = base64ToArrayBuffer(url.slice(9));
-      let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
-      ext = ext ? `.${ext}` : "";
+      const base64 = data.slice(7);
+      const image = base64ToArrayBuffer(base64);
+      const ext = contentType.slice(6);
       hash = Array.from(
         new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
       )
