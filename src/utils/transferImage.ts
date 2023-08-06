@@ -31,7 +31,7 @@ export async function transferImage(
         if (imagesMap.has(hash)) {
           ctx.res.statusCode = 200;
           ctx.res.setHeader("Content-Type", `image/${ext}`);
-          // @FIXME: I directly use `ctx.res.end` here to
+          // FIXME: I directly use `ctx.res.end` here to
           // avoid some strange behavior that causes content-type to always be `application/json`
           ctx.res.end(imagesMap.get(hash));
         } else {
@@ -67,10 +67,10 @@ export async function transferImage(
     case "base64:": {
       const base64 = hostname.replace(/^\/\//, "");
       const image = base64ToArrayBuffer(base64);
-      let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
+      const fileType = await fromBuffer(image);
       return transferImage.call(
         this,
-        `data:image/${ext};base64,${url.slice(9)}`,
+        `data:image/${fileType!.ext};base64,${url.slice(9)}`,
         villaId,
       );
     }
