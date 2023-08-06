@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.0...v0.6.1) (2023-08-06)
+
+### Bug Fixes
+
+- **emoticon:** fix getEmoticonList() error ([6c8f934](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/6c8f934d893e0cc16eb8232ddd2cfcafe66bbf21))
+- **parseMessage:** fix emoticon parse ([3cf0d6d](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/3cf0d6da4c7adca133bbc82fe43e2f62d74d624b))
+
 ## [0.6.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.5.1...v0.6.0) (2023-08-06)
 
 ### Features
