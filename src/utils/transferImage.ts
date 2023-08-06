@@ -9,13 +9,38 @@ import type { VillaBot } from "../bot";
 import { API } from "../structs";
 import { logger } from "./logger";
 
-const images: Record<string, ArrayBuffer> = {};
+const imagesMap: Map<string, ArrayBuffer> = new Map();
+let routerInitialized = false;
 
 export async function transferImage(
   this: VillaBot,
   url: string,
   villaId: string,
 ): Promise<string> {
+  if (!routerInitialized) {
+    routerInitialized = true;
+    this.ctx.router.get(
+      `${this.config.path}/:hash(\\w+).:ext([a-zA-Z]+)`,
+      (
+        ctx: ParameterizedContext<
+          Record<never, never>,
+          { params: { hash: string; ext: string } }
+        >,
+      ) => {
+        const { hash, ext } = ctx.params;
+        if (imagesMap.has(hash)) {
+          ctx.res.statusCode = 200;
+          ctx.res.setHeader("Content-Type", `image/${ext}`);
+          // @FIXME: I directly use `ctx.res.end` here to
+          // avoid some strange behavior that causes content-type to always be `application/json`
+          ctx.res.end(imagesMap.get(hash));
+        } else {
+          ctx.status = 404;
+        }
+      },
+    );
+  }
+
   const { hostname, protocol } = new URL(url);
   let hash: string | undefined, sourceUrl: string;
 
@@ -67,10 +92,10 @@ export async function transferImage(
       )
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("");
-      images[hash] = image;
+      imagesMap.set(hash, image);
       sourceUrl = `${this.ctx.root.config.selfUrl!}${
         this.config.path
-      }/${hash}${ext}`;
+      }/${hash}.${ext}`;
       break;
     }
     default: {
@@ -78,24 +103,6 @@ export async function transferImage(
       return url;
     }
   }
-
-  this.ctx.router.get(
-    `${this.config.path}/:hash(\\w+).:ext`,
-    (
-      ctx: ParameterizedContext<
-        Record<never, never>,
-        { params: { hash: string } }
-      >,
-    ) => {
-      const { hash } = ctx.params;
-      if (hash in images) {
-        ctx.status = 200;
-        ctx.body = images[hash];
-      } else {
-        ctx.status = 404;
-      }
-    },
-  );
 
   try {
     for (let i = 0; i < this.config.transfer.maxRetries; i++) {
@@ -138,6 +145,6 @@ export async function transferImage(
       logger.error(`Failed to transfer image ${url}: ${err.message}`);
     return url;
   } finally {
-    if (hash) delete images[hash];
+    if (hash) imagesMap.delete(hash);
   }
 }
