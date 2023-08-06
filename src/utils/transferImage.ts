@@ -44,7 +44,7 @@ export async function transferImage(
       break;
     }
     case "data:": {
-      const [contentType, data] = url.slice(5).split(",");
+      const [contentType, data] = url.slice(5).split(";");
       if (!contentType?.startsWith("image/")) {
         logger.warn(`Unsupported image type: ${contentType}.`);
         return url;
