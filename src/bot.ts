@@ -11,7 +11,6 @@ import { VillaBotConfig } from "./config";
 import {
   calcSecretHash,
   createAxios,
-  defineStruct,
   deleteMessage,
   getAllEmoticons,
   getChannel,
@@ -114,10 +113,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
   protected async handleCallback(ctx: KoaContext) {
     const { body } = ctx.request;
     if (!body) {
-      ctx.body = defineStruct<Callback.Response>({
+      ctx.body = <Callback.Response>{
         message: "Receive empty body",
         retcode: 400,
-      });
+      };
       ctx.status = 400;
       return;
     }
@@ -132,10 +131,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
       ))
     ) {
       logger.warn("Callback signature mismatch, ignored");
-      ctx.body = defineStruct<Callback.Response>({
+      ctx.body = <Callback.Response>{
         message: "Invalid signature",
         retcode: 403,
-      });
+      };
       ctx.status = 403;
       return;
     }
@@ -260,10 +259,10 @@ export class VillaBot extends Bot<VillaBotConfig> {
         // todo
         break;
       default:
-        ctx.body = defineStruct<Callback.Response>({
+        ctx.body = <Callback.Response>{
           message: "Unknown event",
           retcode: -1,
-        });
+        };
         ctx.status = 400;
     }
   }

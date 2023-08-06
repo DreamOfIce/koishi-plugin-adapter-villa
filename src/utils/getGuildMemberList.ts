@@ -1,7 +1,7 @@
 import type { Universal } from "koishi";
 import type { VillaBot } from "../bot";
 import type { API } from "../structs";
-import { defineStruct } from "./defineStruct";
+
 import { logger } from "./logger";
 
 const pageSize = "100";
@@ -21,10 +21,10 @@ export async function getGuildMemberList(
         headers: {
           "x-rpc-bot_villa_id": guildId,
         },
-        params: defineStruct<API.GetVillaMembers.Params>({
+        params: <API.GetVillaMembers.Params>{
           offset_str: offset.toString(),
           size: pageSize,
-        }),
+        },
       },
     );
 

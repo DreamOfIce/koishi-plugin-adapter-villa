@@ -1,7 +1,6 @@
 export * from "./calcSecretHash";
 export * from "./callbackRoute";
 export * from "./createAxios";
-export * from "./defineStruct";
 export * from "./deleteMessage";
 export * from "./emoticons";
 export * from "./getChannel";

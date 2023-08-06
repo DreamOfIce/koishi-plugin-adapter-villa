@@ -1,7 +1,7 @@
 import type { Context } from "koishi";
 import type { KoaContext, KoaMiddleware } from "../types";
 import { logger } from "./logger";
-import { defineStruct } from "./defineStruct";
+
 import type { Callback } from "../structs";
 
 const callbacks: Record<string, KoaMiddleware> = {};
@@ -23,25 +23,25 @@ export function registerCallbackRoute(
         logger.info(`Receive callback of bot ${botId}`);
         logger.debug(JSON.stringify(ctx.request.body, undefined, 2));
         await callback(ctx, next);
-        ctx.body = defineStruct<Callback.Response>({
+        ctx.body = <Callback.Response>{
           message: "Success",
           retcode: 0,
-        });
+        };
         ctx.status = 200;
       } catch (err) {
         logger.error(err);
-        ctx.body = defineStruct<Callback.Response>({
+        ctx.body = <Callback.Response>{
           message: "Error handling callback request",
           retcode: -1,
-        });
+        };
         ctx.status = 500;
       }
     } else {
       logger.warn(`Receive callback of unknown bot: ${botId!}`);
-      ctx.body = defineStruct<Callback.Response>({
+      ctx.body = <Callback.Response>{
         message: "Bot not found",
         retcode: 1,
-      });
+      };
       ctx.status = 400;
     }
   });

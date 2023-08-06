@@ -4,7 +4,7 @@ import { extname } from "path";
 import { fromBuffer } from "file-type";
 import type { ParameterizedContext } from "koa";
 import { base64ToArrayBuffer, sleep } from "koishi";
-import { defineStruct } from "./defineStruct";
+
 import type { VillaBot } from "../bot";
 import { API } from "../structs";
 import { logger } from "./logger";
@@ -89,9 +89,9 @@ export async function transferImage(
           "/vila/api/bot/platform/transferImage",
           {
             method: "POST",
-            data: defineStruct<API.TransferImage.Request>({
+            data: <API.TransferImage.Request>{
               url: sourceUrl,
-            }),
+            },
             headers: {
               "x-rpc-bot_villa_id": villaId,
             },

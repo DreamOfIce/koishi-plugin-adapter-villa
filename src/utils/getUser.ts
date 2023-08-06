@@ -1,7 +1,7 @@
 import type { Universal } from "koishi";
 import type { VillaBot } from "../bot";
 import type { API } from "../structs";
-import { defineStruct } from "./defineStruct";
+
 import { logger } from "./logger";
 import { isBot } from "./isBot";
 
@@ -31,7 +31,7 @@ export async function getUser(
   const res = await this.axios.get<API.GetMember.Response>(
     "/vila/api/bot/platform/getMember",
     {
-      params: defineStruct<API.GetMember.Params>({ uid: userId }),
+      params: <API.GetMember.Params>{ uid: userId },
       headers: {
         "x-rpc-bot_villa_id": guildId,
       },

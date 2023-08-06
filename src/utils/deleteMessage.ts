@@ -1,6 +1,6 @@
 import type { VillaBot } from "../bot";
 import type { API } from "../structs";
-import { defineStruct } from "./defineStruct";
+
 import { logger } from "./logger";
 
 export async function deleteMessage(
@@ -18,11 +18,11 @@ export async function deleteMessage(
 
   const res = await this.axios.post<API.RecallMessage.Response>(
     "/vila/api/bot/platform/recallMessage",
-    defineStruct<API.RecallMessage.Request>({
+    <API.RecallMessage.Request>{
       msg_uid: id,
       msg_time: Number(timestamp),
       room_id: roomId,
-    }),
+    },
     {
       headers: {
         "x-rpc-bot_villa_id": villaId,

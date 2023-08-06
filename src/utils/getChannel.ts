@@ -2,7 +2,6 @@ import type { Universal } from "koishi";
 import type { API } from "../structs";
 import type { VillaBot } from "../bot";
 import { logger } from "./logger";
-import { defineStruct } from "./defineStruct";
 
 export async function getChannel(
   this: VillaBot,
@@ -13,9 +12,9 @@ export async function getChannel(
   const res = await this.axios.get<API.GetRoom.Response>(
     "/vila/api/bot/platform/getVilla",
     {
-      params: defineStruct<API.GetRoom.Params>({
+      params: <API.GetRoom.Params>{
         room_id: roomId,
-      }),
+      },
       headers: {
         "x-rpc-bot_villa_id": villaId,
       },
