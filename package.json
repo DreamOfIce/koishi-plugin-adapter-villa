@@ -46,7 +46,7 @@
     "ts-node": "npm:@dreamofice/ts-node@^10.9.2"
   },
   "dependencies": {
-    "file-type": "16"
+    "file-type": "^16.5.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.7",
@@ -56,11 +56,11 @@
     "@tsconfig/esm": "^1.0.4",
     "@tsconfig/node-lts": "^18.12.3",
     "@tsconfig/strictest": "^2.0.1",
-    "@types/koa": "^2.13.6",
+    "@types/koa": "^2.13.8",
     "@types/koa__router": "^12.0.0",
-    "@types/node": "^20.4.2",
-    "@typescript-eslint/eslint-plugin": "^6.1.0",
-    "@typescript-eslint/parser": "^6.1.0",
+    "@types/node": "^20.4.8",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
@@ -76,7 +76,7 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "koishi": "^4.13.6"
+    "koishi": "^4.14.0"
   },
   "koishi": {
     "description": {
