@@ -43,7 +43,6 @@ export async function transferImage(
       const base64 = hostname.replace(/^\/\//, "");
       const image = base64ToArrayBuffer(base64);
       let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
-      ext = ext ? `.${ext}` : "";
       return transferImage.call(
         this,
         `data:image/${ext};base64,${url.slice(9)}`,
