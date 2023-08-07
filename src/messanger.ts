@@ -244,9 +244,9 @@ export class VillaMessanger extends Messenger<VillaBot> {
 
         this.msg.quote = {
           quoted_message_id: id,
-          quoted_message_send_time: +timestamp,
+          quoted_message_send_time: Number(timestamp),
           original_message_id: id,
-          original_message_send_time: +timestamp,
+          original_message_send_time: Number(timestamp),
         };
         break;
       }
