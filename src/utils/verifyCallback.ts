@@ -15,7 +15,10 @@ export const verifyCallback = async (
     new URLSearchParams({
       body: body?.trim() ?? "",
       secret,
-    }).toString(),
+    })
+      .toString()
+      .replaceAll("*", "%2A")
+      .replaceAll("%7E", "~"),
   );
 
   const publicKey = (publicKeys[pubKey] ??= await webcrypto.subtle.importKey(
