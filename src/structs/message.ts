@@ -35,11 +35,11 @@ export namespace Message {
 
   export interface QuoteInfo {
     quoted_message_id: string;
-    quoted_message_send_time: string;
+    quoted_message_send_time: number;
     /** same as quoted_message_id */
     original_message_id: string;
     /** same as quoted_message_send_time */
-    original_message_send_time: string;
+    original_message_send_time: number;
   }
 
   export type MsgContent = TextMsgContent | ImageMsgContent | PostMsgContent;
