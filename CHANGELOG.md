@@ -1,3 +1,13 @@
+## [0.6.2](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.1...v0.6.2) (2023-08-08)
+
+### Bug Fixes
+
+- **parseMessage:** fix a typo ([55bd77f](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/55bd77fea44238b4e055262eb6b76a5e8c0dfba1))
+- quote time should be int ([#2](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/2)) ([e5d09ef](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/e5d09ef2b1f20b5160e31bbb214517e1b71d2b66))
+- **transferImage:** fix some typos, close [#3](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/3), [#4](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/4), [#5](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/5) ([62ccb11](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/62ccb11f2ece9f44b51eca1ef08c15402e29d7b1))
+- **transferImage:** support for `data:` protocol ([9f992c6](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/9f992c605d87afc0c2b63a028ba2a748aa72362e))
+- **verifyCallback:** make url encoding of search params consistent with villa ([6e50f30](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/6e50f302cc268e660ca12a718652022f2cdf4f67))
+
 ## [0.6.1](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.0...v0.6.1) (2023-08-06)
 
 ### Bug Fixes
