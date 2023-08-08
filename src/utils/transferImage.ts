@@ -136,11 +136,11 @@ export async function transferImage(
         return data.data.new_url;
       }
     }
-    return url;
+    return imgUrl;
   } catch (err) {
     if (err instanceof Error)
-      logger.error(`Failed to transfer image ${url}: ${err.message}`);
-    return url;
+      logger.error(`Failed to transfer image ${imgUrl}: ${err.message}`);
+    return imgUrl;
   } finally {
     if (hash) images.delete(hash);
   }
