@@ -9,58 +9,72 @@ import type { VillaBot } from "../bot";
 import { API } from "../structs";
 import { logger } from "./logger";
 
-const images: Record<string, ArrayBuffer> = {};
+interface Image {
+  data: ArrayBuffer;
+  mime: string;
+}
+
+const images: Map<string, Image> = new Map();
+
+const addImage = async (
+  image: ArrayBuffer,
+  typeInfo: { ext?: string; mime?: string } = {},
+) => {
+  const { ext = "", mime = "application/octet-stream" } = {
+    ...((await fromBuffer(image)) ?? {}),
+    ...typeInfo,
+  };
+  const hash = Array.from(
+    new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
+  )
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  images.set(hash, { data: image, mime });
+  return {
+    hash,
+    url: `/${hash}${ext.length > 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
+  };
+};
 
 export async function transferImage(
   this: VillaBot,
-  url: string,
+  imgUrl: string,
   villaId: string,
 ): Promise<string> {
-  const { hostname, protocol } = new URL(url);
-  let hash: string | undefined, sourceUrl: string;
+  const { hostname, protocol } = new URL(imgUrl);
+  let hash: string | undefined, url: string | undefined;
 
   switch (protocol) {
     case "http:":
     case "https:": {
       if (hostname.endsWith("mihoyo.com") || hostname.endsWith("miyoushe.com"))
-        return url;
+        return imgUrl;
       else {
-        sourceUrl = url;
+        url = imgUrl;
         break;
       }
     }
     case "file:": {
-      const image = await readFile(url);
-      const ext: string = extname(url);
-      hash = Array.from(
-        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
-      )
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-      images[hash] = image;
-      sourceUrl = `${this.ctx.root.config.selfUrl!}${
-        this.config.path
-      }/${hash}${ext}`;
+      const image = await readFile(imgUrl);
+      const ext: string = extname(imgUrl);
+      ({ hash, url } = await addImage(image, { ext }));
       break;
     }
+    case "data:": {
+      const [mime, data] = imgUrl.slice(7).split(",") as [string, string];
+      const image = base64ToArrayBuffer(data.slice(7));
+      ({ hash, url } = await addImage(image, { mime }));
+      break;
+    }
+    // TODO: remove legacy support for protocol base64:
     case "base64:": {
-      const image = base64ToArrayBuffer(url.slice(9));
-      let { ext }: { ext?: string } = (await fromBuffer(image)) ?? {};
-      ext = ext ? `.${ext}` : "";
-      hash = Array.from(
-        new Uint8Array(await webcrypto.subtle.digest("SHA-256", image)),
-      )
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-      images[hash] = image;
-      sourceUrl = `${this.ctx.root.config.selfUrl!}${
-        this.config.path
-      }/${hash}${ext}`;
+      const image = base64ToArrayBuffer(imgUrl.slice(9));
+      ({ hash, url } = await addImage(image));
       break;
     }
     default: {
       logger.warn(`Unsupported image protocol: ${protocol}.`);
-      return url;
+      return imgUrl;
     }
   }
 
@@ -73,9 +87,11 @@ export async function transferImage(
       >,
     ) => {
       const { hash } = ctx.params;
-      if (hash in images) {
+      if (images.has(hash)) {
         ctx.status = 200;
-        ctx.body = images[hash];
+        const { data, mime } = images.get(hash)!;
+        ctx.type = mime;
+        ctx.body = data;
       } else {
         ctx.status = 404;
       }
@@ -90,7 +106,10 @@ export async function transferImage(
           {
             method: "POST",
             data: <API.TransferImage.Request>{
-              url: sourceUrl,
+              url: new URL(
+                url,
+                `${this.ctx.root.config.selfUrl!}${this.config.path}`,
+              ).href,
             },
             headers: {
               "x-rpc-bot_villa_id": villaId,
@@ -123,6 +142,6 @@ export async function transferImage(
       logger.error(`Failed to transfer image ${url}: ${err.message}`);
     return url;
   } finally {
-    if (hash) delete images[hash];
+    if (hash) images.delete(hash);
   }
 }
