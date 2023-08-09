@@ -54,19 +54,28 @@ export async function transferImage(
         break;
       }
     }
+    // file:///path/to/image
     case "file:": {
       const image = await readFile(imgUrl);
       const ext: string = extname(imgUrl);
       ({ hash, url } = await addImage(image, { ext }));
       break;
     }
+    // https://developer.mozilla.org/docs/Web/HTTP/Basics_of_HTTP/Data_URLs
+    // data:[<mediatype>][;base64],<data>
     case "data:": {
-      const [mime, data] = imgUrl.slice(7).split(",") as [string, string];
-      const image = base64ToArrayBuffer(data.slice(7));
-      ({ hash, url } = await addImage(image, { mime }));
+      const [info, data] = imgUrl.slice(5).split(",") as [string, string];
+      const [mime, b64sign] = info.split(";");
+      if (!mime.startsWith("image/") || b64sign !== "base64") {
+        logger.warn("Unsupported dataURL format.");
+        return imgUrl;
+      }
+      const image = base64ToArrayBuffer(data);
+      ({ hash, url } = await addImage(image));
       break;
     }
-    // TODO: remove legacy support for protocol base64:
+    // TODO: remove legacy support for protocol base64://
+    // base64://base64-encoded-image
     case "base64:": {
       const image = base64ToArrayBuffer(imgUrl.slice(9));
       ({ hash, url } = await addImage(image));
