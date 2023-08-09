@@ -1,3 +1,10 @@
+## [0.6.3](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.2...v0.6.3) (2023-08-09)
+
+### Bug Fixes
+
+- **transferImage:** fix error with Uint8Array ([9508f46](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/9508f46e078d055123e863303006dae432845cb2))
+- **transferimage:** fix some erorrs, close [#6](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/6), close [#7](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/7) ([#8](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/issues/8)) ([90dfa4a](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/90dfa4a242e5e49b2840526e51094b6d37dd73bb))
+
 ## [0.6.2](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.1...v0.6.2) (2023-08-08)
 
 ### Bug Fixes
