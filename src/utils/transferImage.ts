@@ -18,7 +18,7 @@ const images: Map<string, Image> = new Map();
 
 const addImage = async (
   image: ArrayBuffer,
-  typeInfo: { ext?: string; mime?: string } = {},
+  typeInfo: { ext?: string | undefined; mime?: string | undefined } = {},
 ) => {
   const { ext = "", mime = "application/octet-stream" } = {
     ...((await fromBuffer(image)) ?? {}),
@@ -32,7 +32,7 @@ const addImage = async (
   images.set(hash, { data: image, mime });
   return {
     hash,
-    url: `/${hash}${ext.length > 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
+    url: `${hash}${ext.length > 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
   };
 };
 
@@ -54,28 +54,25 @@ export async function transferImage(
         break;
       }
     }
-    // file:///path/to/image
     case "file:": {
       const image = await readFile(imgUrl);
       const ext: string = extname(imgUrl);
       ({ hash, url } = await addImage(image, { ext }));
       break;
     }
-    // https://developer.mozilla.org/docs/Web/HTTP/Basics_of_HTTP/Data_URLs
     // data:[<mediatype>][;base64],<data>
     case "data:": {
-      const [info, data] = imgUrl.slice(5).split(",") as [string, string];
-      const [mime, b64sign] = info.split(";");
-      if (!mime.startsWith("image/") || b64sign !== "base64") {
-        logger.warn("Unsupported dataURL format.");
+      const [type, data] = imgUrl.slice(5).split(",") as [string, string];
+      const [mime, encode] = type.split(";");
+      if (encode !== "base64") {
+        logger.warn(`Unsupported dataURL encode: ${encode}.`);
         return imgUrl;
       }
       const image = base64ToArrayBuffer(data);
-      ({ hash, url } = await addImage(image));
+      ({ hash, url } = await addImage(image, { mime }));
       break;
     }
-    // TODO: remove legacy support for protocol base64://
-    // base64://base64-encoded-image
+    // TODO: remove legacy support for protocol base64:
     case "base64:": {
       const image = base64ToArrayBuffer(imgUrl.slice(9));
       ({ hash, url } = await addImage(image));
@@ -117,7 +114,7 @@ export async function transferImage(
             data: <API.TransferImage.Request>{
               url: new URL(
                 url,
-                `${this.ctx.root.config.selfUrl!}${this.config.path}`,
+                `${this.ctx.root.config.selfUrl!}${this.config.path}/`,
               ).href,
             },
             headers: {
