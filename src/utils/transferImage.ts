@@ -10,14 +10,14 @@ import { API } from "../structs";
 import { logger } from "./logger";
 
 interface Image {
-  data: ArrayBuffer;
+  data: Uint8Array;
   mime: string;
 }
 
 const images: Map<string, Image> = new Map();
 
 const addImage = async (
-  image: ArrayBuffer,
+  image: Uint8Array,
   typeInfo: { ext?: string | undefined; mime?: string | undefined } = {},
 ) => {
   const { ext = "", mime = "application/octet-stream" } = {
@@ -94,10 +94,10 @@ export async function transferImage(
     ) => {
       const { hash } = ctx.params;
       if (images.has(hash)) {
-        ctx.status = 200;
         const { data, mime } = images.get(hash)!;
+        ctx.status = 200;
         ctx.type = mime;
-        ctx.body = data;
+        ctx.body = Buffer?.isBuffer(data) ? data : Buffer?.from(data);
       } else {
         ctx.status = 404;
       }
