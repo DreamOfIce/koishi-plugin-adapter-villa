@@ -18,7 +18,7 @@ const images: Map<string, Image> = new Map();
 
 const addImage = async (
   image: ArrayBuffer,
-  typeInfo: { ext?: string; mime?: string } = {},
+  typeInfo: { ext?: string | undefined; mime?: string | undefined } = {},
 ) => {
   const { ext = "", mime = "application/octet-stream" } = {
     ...((await fromBuffer(image)) ?? {}),
@@ -32,7 +32,7 @@ const addImage = async (
   images.set(hash, { data: image, mime });
   return {
     hash,
-    url: `/${hash}${ext.length > 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
+    url: `${hash}${ext.length > 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
   };
 };
 
@@ -60,9 +60,15 @@ export async function transferImage(
       ({ hash, url } = await addImage(image, { ext }));
       break;
     }
+    // data:[<mediatype>][;base64],<data>
     case "data:": {
-      const [mime, data] = imgUrl.slice(7).split(",") as [string, string];
-      const image = base64ToArrayBuffer(data.slice(7));
+      const [type, data] = imgUrl.slice(5).split(",") as [string, string];
+      const [mime, encode] = type.split(";");
+      if (encode !== "base64") {
+        logger.warn(`Unsupported dataURL encode: ${encode}.`);
+        return imgUrl;
+      }
+      const image = base64ToArrayBuffer(data);
       ({ hash, url } = await addImage(image, { mime }));
       break;
     }
@@ -108,7 +114,7 @@ export async function transferImage(
             data: <API.TransferImage.Request>{
               url: new URL(
                 url,
-                `${this.ctx.root.config.selfUrl!}${this.config.path}`,
+                `${this.ctx.root.config.selfUrl!}${this.config.path}/`,
               ).href,
             },
             headers: {
