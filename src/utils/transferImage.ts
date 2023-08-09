@@ -41,6 +41,10 @@ export async function transferImage(
   imgUrl: string,
   villaId: string,
 ): Promise<string> {
+  if (!this.ctx.root.config.selfUrl) {
+    logger.warn("selfUrl is required for image transfer");
+    return imgUrl;
+  }
   const { hostname, protocol } = new URL(imgUrl);
   let hash: string | undefined, url: string | undefined;
 
@@ -65,7 +69,7 @@ export async function transferImage(
       const [type, data] = imgUrl.slice(5).split(",") as [string, string];
       const [mime, encode] = type.split(";");
       if (encode !== "base64") {
-        logger.warn(`Unsupported dataURL encode: ${encode}.`);
+        logger.warn(`Unsupported dataURL encode: ${encode}`);
         return imgUrl;
       }
       const image = base64ToArrayBuffer(data);
@@ -79,13 +83,13 @@ export async function transferImage(
       break;
     }
     default: {
-      logger.warn(`Unsupported image protocol: ${protocol}.`);
+      logger.warn(`Unsupported image protocol: ${protocol}`);
       return imgUrl;
     }
   }
 
   this.ctx.router.get(
-    `${this.config.path}/:hash(\\w+).:ext`,
+    `${this.config.path}/:hash(\\w+)(.:ext)?`,
     (
       ctx: ParameterizedContext<
         Record<never, never>,
@@ -114,7 +118,7 @@ export async function transferImage(
             data: <API.TransferImage.Request>{
               url: new URL(
                 url,
-                `${this.ctx.root.config.selfUrl!}${this.config.path}/`,
+                `${this.ctx.root.config.selfUrl}${this.config.path}/`,
               ).href,
             },
             headers: {
