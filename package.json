@@ -49,8 +49,8 @@
     "file-type": "^16.5.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.6.7",
-    "@commitlint/config-conventional": "^17.6.7",
+    "@commitlint/cli": "^17.7.0",
+    "@commitlint/config-conventional": "^17.7.0",
     "@koishijs/eslint-config": "^1.0.4",
     "@release-it/conventional-changelog": "^7.0.0",
     "@tsconfig/esm": "^1.0.4",
@@ -58,7 +58,7 @@
     "@tsconfig/strictest": "^2.0.1",
     "@types/koa": "^2.13.8",
     "@types/koa__router": "^12.0.0",
-    "@types/node": "^20.4.8",
+    "@types/node": "^20.4.9",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "dotenv-cli": "^7.2.1",
