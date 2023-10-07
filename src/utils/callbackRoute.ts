@@ -1,4 +1,4 @@
-import type { Context } from "koishi";
+import type { Context } from "@satorijs/satori";
 import type { KoaContext, KoaMiddleware } from "../types";
 import { logger } from "./logger";
 

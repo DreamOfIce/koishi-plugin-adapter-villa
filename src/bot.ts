@@ -4,9 +4,9 @@ import {
   type Fragment,
   h,
   Quester,
-  type SendOptions,
-  type Universal,
-} from "koishi";
+  Universal,
+} from "@satorijs/satori";
+import type { SendOptions } from "@satorijs/protocol";
 import { VillaBotConfig } from "./config";
 import {
   calcSecretHash,
@@ -44,7 +44,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
   /** emoticons */
   protected emoticon: {
     list: Emoticon.Emoticon[];
-    task?: NodeJS.Timer;
+    task?: ReturnType<typeof setInterval>;
     expries?: number;
   } = { list: [] };
 
@@ -57,6 +57,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
     this.id = config.id;
     this.secret = config.secret;
     this.selfId = config.id;
+    this.user = { id: config.id, isBot: true };
 
     this.axios = ctx.http;
   }
@@ -101,13 +102,15 @@ export class VillaBot extends Bot<VillaBotConfig> {
     return this.getUser(this.selfId);
   }
 
-  public override sendMessage(
+  public override async sendMessage(
     channelId: string,
     content: Fragment,
     guildId?: string | undefined,
     options?: SendOptions | undefined,
   ): Promise<string[]> {
-    return new VillaMessanger(this, channelId, guildId, options).send(content);
+    return (
+      await new VillaMessanger(this, channelId, guildId, options).send(content)
+    ).map((msg) => msg.id!);
   }
 
   protected async handleCallback(ctx: KoaContext) {
@@ -139,8 +142,8 @@ export class VillaBot extends Bot<VillaBotConfig> {
       return;
     }
 
-    this.avatar = body.event.robot.template.icon;
-    this.username = body.event.robot.template.name;
+    this.user.avatar = body.event.robot.template.icon;
+    this.user.name = body.event.robot.template.name;
     this.description = body.event.robot.template.desc;
 
     const eventData = body.event.extend_data.EventData;
@@ -149,9 +152,9 @@ export class VillaBot extends Bot<VillaBotConfig> {
         const session = super.session({
           type: "guild-member-added",
           subtype: "group",
-          guildId: body.event.robot.villa_id.toString(),
+          guild: { id: body.event.robot.villa_id.toString() },
           timestamp: eventData.JoinVilla.join_at,
-          userId: eventData.JoinVilla.join_uid.toString(),
+          user: { id: eventData.JoinVilla.join_uid.toString() },
         });
         logger.info(
           `New member of villa ${body.event.robot.villa_id}: ${eventData.JoinVilla.join_uid}`,
@@ -168,24 +171,31 @@ export class VillaBot extends Bot<VillaBotConfig> {
             ? (msg.content as Message.TextMsgContent).text
             : "";
         const session = super.session({
-          author: {
-            username: eventData.SendMessage.nickname,
-            nickname: eventData.SendMessage.nickname,
-            userId: eventData.SendMessage.from_user_id.toString(),
+          type: "message",
+          channel: {
+            id: `${body.event.robot.villa_id}~${eventData.SendMessage.room_id}`,
+            type: Universal.Channel.Type.TEXT,
+          },
+          guild: { id: body.event.robot.villa_id.toString() },
+          member: {
+            name: eventData.SendMessage.nickname,
             avatar: msg.user.portraitUri,
           },
-          type: "message",
-          subtype: "group",
-          channelId: `${body.event.robot.villa_id}~${eventData.SendMessage.room_id}`,
-          content,
-          elements: parseMessage(eventData.SendMessage.object_name, msg, {
-            emoticonList: await this.getEmoticonList(),
-            strictEmoticon: this.config.emoticon.strict,
-          }),
-          guildId: body.event.robot.villa_id.toString(),
-          messageId: `${eventData.SendMessage.msg_uid}~${eventData.SendMessage.send_at}`,
+          message: {
+            id: `${eventData.SendMessage.msg_uid}~${eventData.SendMessage.send_at}`,
+            content,
+            elements: parseMessage(eventData.SendMessage.object_name, msg, {
+              emoticonList: await this.getEmoticonList(),
+              strictEmoticon: this.config.emoticon.strict,
+            }),
+          },
+          platform: this.platform,
           timestamp: eventData.SendMessage.send_at,
-          userId: eventData.SendMessage.from_user_id.toString(),
+          selfId: this.selfId,
+          user: {
+            id: eventData.SendMessage.from_user_id.toString(),
+            avatar: msg.user.portraitUri,
+          },
         });
         logger.info(
           `Receive message '${content}'(${eventData.SendMessage.msg_uid})`,
@@ -196,8 +206,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
       case Callback.RobotEventType.CreateRobot: {
         const session = super.session({
           type: "guild-added",
-          subtype: "group",
-          guildId: eventData.CreateRobot.villa_id.toString(),
+          guild: { id: eventData.CreateRobot.villa_id.toString() },
           timestamp: new Date().getTime(),
         });
         logger.info(
@@ -209,8 +218,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
       case Callback.RobotEventType.DeleteRobot: {
         const session = super.session({
           type: "guild-deleted",
-          subtype: "group",
-          guildId: eventData.DeleteRobot.villa_id.toString(),
+          guild: { id: eventData.DeleteRobot.villa_id.toString() },
           timestamp: new Date().getTime(),
         });
         logger.info(
@@ -224,30 +232,30 @@ export class VillaBot extends Bot<VillaBotConfig> {
           type: `reaction-${
             eventData.AddQuickEmoticon.is_cancel ? "deleted" : "added"
           }`,
-          subtype: "group",
-          channelId: `${eventData.AddQuickEmoticon.villa_id}~${eventData.AddQuickEmoticon.room_id}`,
-          elements: [
-            h("face", {
-              id: eventData.AddQuickEmoticon.emoticon_id,
-              name: eventData.AddQuickEmoticon.emoticon,
-              platform: this.platform,
-            }),
-          ],
-          guildId: eventData.AddQuickEmoticon.villa_id.toString(),
-          quote: {
-            author: {
-              userId: eventData.AddQuickEmoticon.uid.toString(),
-            },
-            channelId: `${eventData.AddQuickEmoticon.villa_id}~${eventData.AddQuickEmoticon.room_id}`,
+          channel: {
+            id: `${eventData.AddQuickEmoticon.villa_id}~${eventData.AddQuickEmoticon.room_id}`,
+            type: Universal.Channel.Type.TEXT,
+          },
+          guild: { id: eventData.AddQuickEmoticon.villa_id.toString() },
+          message: {
             elements: [
-              h("quote", { id: eventData.AddQuickEmoticon.msg_uid.toString() }),
+              h("face", {
+                id: eventData.AddQuickEmoticon.emoticon_id,
+                name: eventData.AddQuickEmoticon.emoticon,
+                platform: this.platform,
+              }),
             ],
-            guildId: eventData.AddQuickEmoticon.villa_id.toString(),
-            messageId: `${eventData.AddQuickEmoticon.msg_uid}:0`,
-            timestamp: new Date().getTime(),
+            quote: {
+              elements: [
+                h("quote", {
+                  id: eventData.AddQuickEmoticon.msg_uid.toString(),
+                }),
+              ],
+              messageId: `${eventData.AddQuickEmoticon.msg_uid}:0`,
+            },
           },
           timestamp: new Date().getTime(),
-          userId: eventData.AddQuickEmoticon.uid.toString(),
+          user: { id: eventData.AddQuickEmoticon.uid.toString() },
         });
         logger.info(
           `Receive reaction '${eventData.AddQuickEmoticon.emoticon}' on message ${eventData.AddQuickEmoticon.msg_uid}`,

@@ -1,3 +1,3 @@
-import { Logger } from "koishi";
+import { Logger } from "@satorijs/satori";
 
 export const logger = new Logger("adapter-villa");

@@ -3,11 +3,11 @@ import { readFile } from "fs/promises";
 import { extname } from "path";
 import { fromBuffer } from "file-type";
 import type { ParameterizedContext } from "koa";
-import { base64ToArrayBuffer, sleep } from "koishi";
-
+import { base64ToArrayBuffer } from "@satorijs/satori";
 import type { VillaBot } from "../bot";
 import { API } from "../structs";
 import { logger } from "./logger";
+import { sleep } from "./misc";
 
 interface Image {
   data: Uint8Array;

@@ -1,4 +1,4 @@
-import type { Universal } from "koishi";
+import { Universal } from "@satorijs/satori";
 import type { API } from "../structs";
 import type { VillaBot } from "../bot";
 import { logger } from "./logger";
@@ -28,7 +28,8 @@ export async function getChannel(
   }
 
   return {
-    channelId,
-    channelName: res.data?.room.room_name,
+    id: channelId,
+    name: res.data?.room.room_name,
+    type: Universal.Channel.Type.TEXT,
   };
 }

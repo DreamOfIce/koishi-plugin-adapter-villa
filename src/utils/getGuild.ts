@@ -1,4 +1,4 @@
-import type { Universal } from "koishi";
+import type { Universal } from "@satorijs/satori";
 import type { VillaBot } from "../bot";
 import type { API } from "../structs";
 import { logger } from "./logger";
@@ -23,7 +23,7 @@ export async function getGuild(
   }
 
   return {
-    guildId: res.data.villa.villa_id.toString(),
-    guildName: res.data?.villa.name,
+    id: res.data.villa.villa_id.toString(),
+    name: res.data?.villa.name,
   };
 }

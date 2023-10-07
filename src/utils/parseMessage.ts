@@ -1,4 +1,4 @@
-import { type Dict, type Element, h } from "koishi";
+import { type Dict, type Element, h } from "@satorijs/satori";
 import { type Emoticon, Message } from "../structs";
 
 const postPrefix = "https://www.miyoushe.com/dby/article/";
@@ -118,7 +118,7 @@ export const parseMessage = (
  * @param content message content
  * @param strictEmoticon match emoticon strictly
  * @param emoticonList emoticon list
- * @returns Koishi elements array
+ * @returns satori elements array
  */
 export const parseTextMessageContent = (
   content: Message.TextMsgContent,
@@ -241,7 +241,7 @@ export const parseTextMessageContent = (
 /**
  * Parse message of type "MHY:Image"
  * @param content message content
- * @returns Koishi elements array
+ * @returns satori elements array
  */
 export const parseImageMessageContent = (
   content: Message.ImageMsgContent,
@@ -250,7 +250,7 @@ export const parseImageMessageContent = (
 /**
  * Parse message of type "MHY:Post"
  * @param content message content
- * @returns Koishi elements array
+ * @returns satori elements array
  */
 export const parsePostMessageContent = (
   content: Message.PostMsgContent,

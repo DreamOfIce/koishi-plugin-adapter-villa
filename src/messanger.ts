@@ -1,4 +1,5 @@
-import { type Dict, Element, Messenger, type SendOptions } from "koishi";
+import { type Dict, Element, Messenger, Universal } from "@satorijs/satori";
+import type { SendOptions } from "@satorijs/protocol";
 import { API, Message } from "./structs";
 import { isBot, logger } from "./utils";
 import type { VillaBot } from "./bot";
@@ -59,10 +60,13 @@ export class VillaMessanger extends Messenger<VillaBot> {
         }
 
         const session = this.bot.session(this.session);
-        session.messageId = `${res.data.bot_msg_id}:bot_msg`;
-        session.timestamp = new Date().getTime();
-        session.userId = this.bot.userId;
-        this.results.push(session);
+        const message: Universal.Message = {
+          id: `${res.data.bot_msg_id}:bot_msg`,
+          timestamp: new Date().getTime(),
+          user: this.bot.user,
+        };
+        session.event.message = message;
+        this.results.push(message);
         session.app.emit(session, "send", session);
       }
     } catch (err) {
@@ -140,7 +144,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
         const {
           id,
           name = `#${
-            (await this.bot.getChannel(id)).channelName ?? id.split("~")[1]!
+            (await this.bot.getChannel(id)).name ?? id.split("~")[1]!
           }`,
         } = element.attrs as Dict<string, "id" | "name" | "guild">;
         const [villaId, roomId] = id.split("~") as [string, string];

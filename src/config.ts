@@ -1,6 +1,6 @@
-import { type Bot, Schema } from "koishi";
+import { Quester, Schema } from "@satorijs/satori";
 
-export interface VillaBotConfig extends Bot.Config {
+export interface VillaBotConfig extends Quester.Config {
   id: string;
   secret: string;
   emoticon: {

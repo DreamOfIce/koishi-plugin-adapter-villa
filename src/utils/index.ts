@@ -10,6 +10,7 @@ export * from "./getGuildMemberList";
 export * from "./getUser";
 export * from "./isBot";
 export * from "./logger";
+export * from "./misc";
 export * from "./parseMessage";
 export * from "./transferImage";
 export * from "./verifyCallback";

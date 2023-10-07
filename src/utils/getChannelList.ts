@@ -1,4 +1,4 @@
-import type { Universal } from "koishi";
+import { Universal } from "@satorijs/satori";
 import type { API } from "../structs";
 import type { VillaBot } from "../bot";
 import { logger } from "./logger";
@@ -6,7 +6,7 @@ import { logger } from "./logger";
 export async function getChannelList(
   this: VillaBot,
   guildId: string,
-): Promise<Universal.Channel[]> {
+): Promise<Universal.List<Universal.Channel>> {
   const res = await this.axios.get<API.GetRoomList.Response>(
     "/vila/api/bot/platform/getVillaGroupRoomList",
     {
@@ -27,10 +27,11 @@ export async function getChannelList(
   res.data.list.forEach((group) =>
     group.room_list.forEach((room) =>
       channels.push({
-        channelId: `${guildId}~${room.room_id}`,
-        channelName: room.room_name,
+        id: `${guildId}~${room.room_id}`,
+        name: room.room_name,
+        type: Universal.Channel.Type.TEXT,
       }),
     ),
   );
-  return channels;
+  return { data: channels };
 }

@@ -1,4 +1,4 @@
-import type { Context } from "koishi";
+import type { Context } from "@satorijs/satori";
 import { API, type Emoticon } from "../structs";
 import { logger } from "./logger";
 import type { VillaBot } from "../bot";

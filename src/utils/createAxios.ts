@@ -1,4 +1,4 @@
-import type { Context } from "koishi";
+import type { Context } from "@satorijs/satori";
 
 export const createAxios = (
   ctx: Context,

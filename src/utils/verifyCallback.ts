@@ -1,5 +1,5 @@
 import { webcrypto } from "crypto";
-import { base64ToArrayBuffer } from "koishi";
+import { base64ToArrayBuffer } from "@satorijs/satori";
 
 // public key import cache
 const publicKeys: Record<string, webcrypto.CryptoKey> = {};
