@@ -1,3 +1,13 @@
+## [0.7.0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.3...v0.7.0) (2023-10-08)
+
+### ⚠ BREAKING CHANGES
+
+- migrate to satori v3
+
+### Features
+
+- migrate to satori v3 ([9f378f0](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/commit/9f378f030e98daeac0ac0a40598b2bd125fe5a6e))
+
 ## [0.6.3](https://github.com/DreamOfIce/koishi-plugin-adapter-villa/compare/v0.6.2...v0.6.3) (2023-08-09)
 
 ### Bug Fixes
