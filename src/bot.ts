@@ -29,6 +29,7 @@ import {
 import type { KoaContext } from "./types";
 import { Callback, type Emoticon, Message } from "./structs";
 import { VillaMessanger } from "./messanger";
+import { uploadImage } from "./utils/uploadImage";
 
 export class VillaBot extends Bot<VillaBotConfig> {
   /** bot id */
@@ -284,6 +285,7 @@ export class VillaBot extends Bot<VillaBotConfig> {
 
   protected getEmoticonList = getEmoticonList;
   public transferImage = transferImage;
+  public uploadImage = uploadImage;
 
   public override deleteMessage = deleteMessage;
   public override getChannel = getChannel;

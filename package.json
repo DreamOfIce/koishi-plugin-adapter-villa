@@ -46,7 +46,8 @@
     "ts-node": "npm:@dreamofice/ts-node@^10.9.2"
   },
   "dependencies": {
-    "file-type": "^16.5.4"
+    "file-type": "^16.5.4",
+    "js-md5": "^0.8.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",

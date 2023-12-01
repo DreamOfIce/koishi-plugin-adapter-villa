@@ -32,7 +32,7 @@ const addImage = async (
   images.set(hash, { data: image, mime });
   return {
     hash,
-    url: `${hash}${ext.length > 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
+    url: `${hash}${ext.length === 0 && ext.startsWith(".") ? ext : `.${ext}`}`,
   };
 };
 
@@ -83,7 +83,7 @@ export async function transferImage(
       break;
     }
     default: {
-      logger.warn(`Unsupported image protocol: ${protocol}`);
+      logger.error(`Unsupported image protocol: ${protocol}`);
       return imgUrl;
     }
   }
@@ -109,7 +109,7 @@ export async function transferImage(
   );
 
   try {
-    for (let i = 0; i < this.config.transfer.maxRetries; i++) {
+    for (let i = 0; i < this.config.image.transferMaxRetries; i++) {
       const { data, status } =
         await this.axios.axios<API.TransferImage.Response>(
           "/vila/api/bot/platform/transferImage",
@@ -129,10 +129,10 @@ export async function transferImage(
           },
         );
       if (status === 429) {
-        if (this.config.transfer.maxRetries !== i) {
+        if (this.config.image.transferMaxRetries !== i) {
           logger.warn(
             `Image transfer API returned 429, try again after 5s(${
-              this.config.transfer.maxRetries - i
+              this.config.image.transferMaxRetries - i
             } retries left)`,
           );
           await sleep(5000);

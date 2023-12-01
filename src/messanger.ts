@@ -190,14 +190,36 @@ export class VillaMessanger extends Messenger<VillaBot> {
       }
       case "image": {
         const url = (element.attrs as Dict<string, "url">)["url"];
-        const newUrl = await this.bot.transferImage(url, this.villaId);
-        const { protocol } = new URL(newUrl);
+        let imgUrl: string;
+        switch (this.bot.config.image.method) {
+          case "auto": {
+            const { protocol } = new URL(url);
+            switch (protocol) {
+              // TODO: remove legacy support for protocol base64:
+              case "base64:":
+              case "file:":
+              case "data:":
+                imgUrl = await this.bot.uploadImage(url, this.villaId);
+                break;
+              default:
+                imgUrl = await this.bot.transferImage(url, this.villaId);
+            }
+            break;
+          }
+          case "transfer":
+            imgUrl = await this.bot.transferImage(url, this.villaId);
+            break;
+          case "upload":
+            imgUrl = await this.bot.uploadImage(url, this.villaId);
+            break;
+        }
+        const { protocol } = new URL(imgUrl);
         if (protocol !== "http:" && protocol !== "https:")
           throw new Error(`Unsupported image protocol: ${protocol}`);
         await this.flush();
         const msg: Message.MsgContentInfo<Message.ImageMsgContent> = {
           content: {
-            url: newUrl,
+            url: imgUrl,
           },
         };
         await this.flush(msg, Message.MessageType.image);
