@@ -41,7 +41,7 @@ export async function transferImage(
   imgUrl: string,
   villaId: string,
 ): Promise<string> {
-  if (!this.ctx.root.config.selfUrl) {
+  if (!this.ctx.router.config.selfUrl) {
     logger.warn("selfUrl is required for image transfer");
     return imgUrl;
   }
@@ -118,7 +118,7 @@ export async function transferImage(
             data: <API.TransferImage.Request>{
               url: new URL(
                 url,
-                `${this.ctx.root.config.selfUrl}${this.config.path}/`,
+                `${this.ctx.router.config.selfUrl}${this.config.path}/`,
               ).href,
             },
             headers: {

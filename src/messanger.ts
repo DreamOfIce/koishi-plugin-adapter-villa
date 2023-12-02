@@ -1,10 +1,19 @@
-import { type Dict, Element, Messenger, Universal } from "@satorijs/satori";
+import {
+  Context,
+  type Dict,
+  Element,
+  Messenger,
+  Universal,
+} from "@satorijs/satori";
 import type { SendOptions } from "@satorijs/protocol";
 import { API, Message } from "./structs";
 import { isBot, logger } from "./utils";
 import type { VillaBot } from "./bot";
 
-export class VillaMessanger extends Messenger<VillaBot> {
+export class VillaMessanger<C extends Context = Context> extends Messenger<
+  C,
+  VillaBot<C>
+> {
   private villaId: string;
   private roomId: string;
   private msg: Message.MsgContentInfo<Message.TextMsgContent> = {
@@ -15,7 +24,7 @@ export class VillaMessanger extends Messenger<VillaBot> {
   };
 
   constructor(
-    bot: VillaBot,
+    bot: VillaBot<C>,
     channelId: string,
     guildId?: string,
     options?: SendOptions,

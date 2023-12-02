@@ -55,6 +55,7 @@
     "@koishijs/eslint-config": "^1.0.4",
     "@release-it/conventional-changelog": "^7.0.2",
     "@satorijs/protocol": "^1.0.1",
+    "@satorijs/router": "^1.1.2",
     "@satorijs/satori": "^3.0.0-rc.0",
     "@tsconfig/node-lts": "^18.12.5",
     "@tsconfig/strictest": "^2.0.2",

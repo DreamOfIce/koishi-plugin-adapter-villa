@@ -1,3 +1,4 @@
+import {} from "@satorijs/router";
 import {
   Bot,
   type Context,
@@ -31,7 +32,12 @@ import { Callback, type Emoticon, Message } from "./structs";
 import { VillaMessanger } from "./messanger";
 import { uploadImage } from "./utils/uploadImage";
 
-export class VillaBot extends Bot<VillaBotConfig> {
+export class VillaBot<
+  C extends Context = Context,
+  T extends VillaBotConfig = VillaBotConfig,
+> extends Bot<C, T> {
+  static inject = ["router"];
+
   /** bot id */
   protected id: string;
   /** bot secret */
@@ -52,8 +58,8 @@ export class VillaBot extends Bot<VillaBotConfig> {
   /** axios instance with auth header */
   public axios: Quester;
 
-  public constructor(ctx: Context, config: VillaBotConfig) {
-    super(ctx, config);
+  public constructor(ctx: C, config: T) {
+    super(ctx, config, "villa");
 
     this.id = config.id;
     this.secret = config.secret;
