@@ -82,10 +82,10 @@ export class VillaBot<
       this.apiServer,
     );
     if (this.config.emoticon.strict && !this.config.emoticon.lazy) {
-      this.emoticon.list = await getAllEmoticons(this.ctx, this.apiServer);
+      this.emoticon.list = await getAllEmoticons(this.axios, this.apiServer);
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       this.emoticon.task = setInterval(async () => {
-        this.emoticon.list = await getAllEmoticons(this.ctx, this.apiServer);
+        this.emoticon.list = await getAllEmoticons(this.axios, this.apiServer);
       }, this.config.emoticon.expires);
     }
     registerCallbackRoute(
@@ -289,7 +289,8 @@ export class VillaBot<
     return this.getUser(userId, guildId);
   }
 
-  protected getEmoticonList = getEmoticonList;
+  public getAllEmoticons = getAllEmoticons;
+  public getEmoticonList = getEmoticonList;
   public transferImage = transferImage;
   public uploadImage = uploadImage;
 

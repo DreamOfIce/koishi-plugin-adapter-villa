@@ -1,13 +1,13 @@
-import type { Context } from "@satorijs/satori";
+import type { Quester } from "@satorijs/satori";
 import { API, type Emoticon } from "../structs";
 import { logger } from "./logger";
 import type { VillaBot } from "../bot";
 
 export const getAllEmoticons = async (
-  ctx: Context,
+  quester: Quester,
   apiServer: string,
 ): Promise<Emoticon.Emoticon[]> => {
-  const res = await ctx.http.get<API.getAllEmoticons.Response>(
+  const res = await quester.get<API.getAllEmoticons.Response>(
     "/vila/api/bot/platform/getAllEmoticons",
     { baseURL: apiServer },
   );
@@ -31,7 +31,7 @@ export async function getEmoticonList(
     this.emoticon.expries =
       new Date().getTime() + this.config.emoticon.expires * 1000;
     return (this.emoticon.list = await getAllEmoticons(
-      this.ctx,
+      this.axios,
       this.apiServer,
     ));
   } else {
