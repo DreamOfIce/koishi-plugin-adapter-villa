@@ -54,6 +54,16 @@ export namespace Callback {
       nickname: string;
       msg_uid: string;
       bot_msg_id: string;
+      quote_msg?: {
+        content: string; // pure text
+        msg_uid: string;
+        bot_msg_id: string;
+        send_at: number;
+        msg_type: string;
+        from_user_id: number;
+        from_user_nickname: string;
+        from_user_id_str: string;
+      };
     };
     CreateRobot: {
       villa_id: number;

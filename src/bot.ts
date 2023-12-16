@@ -173,10 +173,22 @@ export class VillaBot<
         const msg = <Callback.MsgContentInfo>(
           JSON.parse(eventData.SendMessage.content)
         );
-        const content =
-          eventData.SendMessage.object_name === Message.MessageNumberType.text
-            ? (msg.content as Message.TextMsgContent).text
-            : "";
+        const message: Universal.Message = {
+          id: `${eventData.SendMessage.msg_uid}~${eventData.SendMessage.send_at}`,
+          content:
+            eventData.SendMessage.object_name === Message.MessageNumberType.text
+              ? (msg.content as Message.TextMsgContent).text
+              : "",
+          elements: parseMessage(eventData.SendMessage.object_name, msg, {
+            emoticonList: await this.getEmoticonList(),
+            strictEmoticon: this.config.emoticon.strict,
+          }),
+        };
+        if (eventData.SendMessage.quote_msg)
+          message.quote = {
+            id: `${eventData.SendMessage.quote_msg.msg_uid}~${eventData.SendMessage.quote_msg.send_at}`,
+            content: eventData.SendMessage.quote_msg.content,
+          };
         const session = super.session({
           type: "message",
           channel: {
@@ -188,14 +200,7 @@ export class VillaBot<
             name: eventData.SendMessage.nickname,
             avatar: msg.user.portraitUri,
           },
-          message: {
-            id: `${eventData.SendMessage.msg_uid}~${eventData.SendMessage.send_at}`,
-            content,
-            elements: parseMessage(eventData.SendMessage.object_name, msg, {
-              emoticonList: await this.getEmoticonList(),
-              strictEmoticon: this.config.emoticon.strict,
-            }),
-          },
+          message,
           platform: this.platform,
           timestamp: eventData.SendMessage.send_at,
           selfId: this.selfId,
@@ -205,7 +210,7 @@ export class VillaBot<
           },
         });
         logger.info(
-          `Receive message '${content}'(${eventData.SendMessage.msg_uid})`,
+          `Receive message '${message.content}'(${eventData.SendMessage.msg_uid})`,
         );
         this.dispatch(session);
         break;
