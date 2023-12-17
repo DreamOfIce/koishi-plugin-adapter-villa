@@ -97,7 +97,7 @@ export class VillaMessanger<C extends Context = Context> extends Messenger<
         this.msg.content.text += element.attrs["content"];
         break;
       case "at": {
-        const { type, name, id } = element.attrs as Dict<string, string>;
+        const { type, name, id } = <Dict<string, string>>element.attrs;
         if (id && name) {
           const length = name.length + 1;
           this.msg.content.text += `@${name}`;
@@ -155,7 +155,7 @@ export class VillaMessanger<C extends Context = Context> extends Messenger<
           name = `#${
             (await this.bot.getChannel(id)).name ?? id.split("~")[1]!
           }`,
-        } = element.attrs as Dict<string, "id" | "name" | "guild">;
+        } = <Dict<string, "id" | "name">>element.attrs;
         const [villaId, roomId] = id.split("~") as [string, string];
 
         this.msg.content.text += name;
@@ -172,17 +172,17 @@ export class VillaMessanger<C extends Context = Context> extends Messenger<
       }
       case "face": {
         this.msg.content.text += `[${
-          (element.attrs as Dict<string, "id">)["id"]
+          (<Dict<string, "id">>element.attrs)["id"]
         }]`;
         break;
       }
       case "a": {
-        const { href } = element.attrs as Dict<string, "href">;
+        const { href } = <Dict<string, "href">>element.attrs;
         const currentMsg = this.msg;
         await this.render(element.children);
         if (this.msg !== currentMsg) {
           logger.warn(
-            `Message is flushed when rendering the child elements of <a>`,
+            `Message is flushed during rendering the child elements of <a>`,
           );
           break;
         }
@@ -198,7 +198,7 @@ export class VillaMessanger<C extends Context = Context> extends Messenger<
         break;
       }
       case "image": {
-        const url = (element.attrs as Dict<string, "url">)["url"];
+        const url = (<Dict<string, "url">>element.attrs)["url"];
         let imgUrl: string;
         switch (this.bot.config.image.method) {
           case "auto": {
@@ -237,7 +237,7 @@ export class VillaMessanger<C extends Context = Context> extends Messenger<
       case "audio":
       case "video":
       case "file": {
-        const url = (element.attrs as Dict<string, "url">)["url"];
+        const url = (<Dict<string, "url">>element.attrs)["url"];
         logger.warn(
           `Media Element <${element.type}> is not currently support by villa bot`,
         );
@@ -268,9 +268,9 @@ export class VillaMessanger<C extends Context = Context> extends Messenger<
         break;
       }
       case "quote": {
-        const [id, timestamp] = (element.attrs as Dict<string, "id">)[
-          "id"
-        ].split("~") as [string, string];
+        const [id, timestamp] = (<Dict<string, "id">>element.attrs)["id"].split(
+          "~",
+        ) as [string, string];
 
         if (timestamp === "bot_msg") {
           logger.warn(`Quote with bot msg id is not support!`);
